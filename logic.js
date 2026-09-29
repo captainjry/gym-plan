@@ -167,3 +167,129 @@ export function splitEntry(entries, i, repdbId, name, swapped) {
   return i + 1;
 }
 export function shortName(name, n = 2) { return String(name || '').trim().split(/\s+/).slice(0, n).join(' '); }
+
+// ---------- History: PRs, e1RM, weeks, streak, bodyweight ----------
+// kg > 0 weighted, kg < 0 assisted machine (magnitude = assistance), null/0 bodyweight
+export const kindOf = (kg) => (kg > 0 ? 'w' : kg < 0 ? 'a' : 'b');
+export const e1rm = (kg, reps) => (kg > 0 ? r2(kg * (1 + reps / 30)) : null);
+// true when set a beats set b (same kind only)
+export function beats(a, b) {
+  const k = kindOf(a.kg);
+  if (k !== kindOf(b.kg)) return false;
+  if (k === 'w') return e1rm(a.kg, a.reps) > e1rm(b.kg, b.reps);
+  if (k === 'a') {
+    const x = -a.kg, y = -b.kg;
+    return (x < y && a.reps >= b.reps) || (x === y && a.reps > b.reps);
+  }
+  return a.reps > b.reps;
+}
+// Best set of a list under the PR rules (first of the best kind = kind of the last set)
+export function bestSet(sets) {
+  if (!sets.length) return null;
+  const k = kindOf(sets[sets.length - 1].kg);
+  let best = null;
+  for (const s of sets) if (kindOf(s.kg) === k && (!best || beats(s, best) || (!beats(best, s) && k === 'a' && -s.kg < -best.kg))) best = s;
+  return best;
+}
+const byTime = (sessions) => [...sessions].sort((a, b) => (a.startedAt < b.startedAt ? -1 : a.startedAt > b.startedAt ? 1 : 0));
+// Set of "sessionId|entryIdx|setIdx" for sets that were a PR when logged. First time an exercise appears is not a PR.
+export function prMap(sessions) {
+  const seen = new Map(); // exKey → sets so far
+  const out = new Set();
+  for (const s of byTime(sessions)) {
+    const added = [];
+    s.entries.forEach((e, ei) => {
+      const k = exKey(e.name);
+      const prior = seen.get(k) || [];
+      e.sets.forEach((set, si) => {
+        const same = [...prior, ...added.filter((x) => x.k === k).map((x) => x.set)].filter((p) => kindOf(p.kg) === kindOf(set.kg));
+        if (prior.length && same.length && same.every((p) => beats(set, p))) out.add(`${s.id}|${ei}|${si}`);
+        else if (prior.length && !same.length) out.add(`${s.id}|${ei}|${si}`);
+        added.push({ k, set });
+      });
+    });
+    for (const a of added) seen.set(a.k, [...(seen.get(a.k) || []), a.set]);
+  }
+  return out;
+}
+// Per-exercise timeline oldest → newest: [{session, sets, best}]
+export function exHistory(sessions, name) {
+  const k = exKey(name);
+  const out = [];
+  for (const s of byTime(sessions)) {
+    const sets = s.entries.filter((e) => exKey(e.name) === k).flatMap((e) => e.sets);
+    if (sets.length) out.push({ session: s, sets, best: bestSet(sets) });
+  }
+  return out;
+}
+// Chart value of one session: weighted → best e1RM, assisted → least assistance, bodyweight → most reps
+export function chartValue(sets) {
+  const k = kindOf(sets[sets.length - 1].kg);
+  const xs = sets.filter((s) => kindOf(s.kg) === k);
+  return k === 'w' ? Math.max(...xs.map((s) => e1rm(s.kg, s.reps))) : k === 'a' ? Math.min(...xs.map((s) => -s.kg)) : Math.max(...xs.map((s) => s.reps));
+}
+// Records: [{name, kind, heaviest, e1rm, date}] most recently trained first
+export function records(sessions) {
+  const m = new Map();
+  for (const s of byTime(sessions))
+    for (const e of s.entries) {
+      if (!e.sets.length) continue;
+      const k = exKey(e.name);
+      const r = m.get(k) || { name: e.name, sets: [] };
+      r.name = e.name; r.last = s.startedAt;
+      r.sets.push(...e.sets.map((x) => ({ ...x, date: s.startedAt })));
+      m.set(k, r);
+    }
+  return [...m.values()].map((r) => {
+    const kind = kindOf(r.sets[r.sets.length - 1].kg);
+    const xs = r.sets.filter((x) => kindOf(x.kg) === kind);
+    const best = bestSet(xs);
+    const heavy = kind === 'w' ? xs.reduce((a, b) => (b.kg > a.kg || (b.kg === a.kg && b.reps > a.reps) ? b : a)) : best;
+    return { name: r.name, kind, heaviest: heavy, e1rm: kind === 'w' ? best : null, date: best.date, last: r.last };
+  }).sort((a, b) => (a.last < b.last ? 1 : -1));
+}
+// Weeks (Mon-first). All dates are local.
+export function weekStart(d) {
+  const x = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  x.setDate(x.getDate() - ((x.getDay() + 6) % 7));
+  return x;
+}
+export function weekInfo(sessions, now = new Date()) {
+  const ws = weekStart(now);
+  const days = Array(7).fill(false);
+  let count = 0;
+  for (const s of sessions) {
+    const d = new Date(s.startedAt);
+    const i = Math.round((new Date(d.getFullYear(), d.getMonth(), d.getDate()) - ws) / 864e5);
+    if (i >= 0 && i < 7) { days[i] = true; count++; }
+  }
+  return { days, count, today: (now.getDay() + 6) % 7 };
+}
+export function weekStreak(sessions, now = new Date()) {
+  const weeks = new Set(sessions.map((s) => ymd(weekStart(new Date(s.startedAt)))));
+  const w = weekStart(now);
+  if (!weeks.has(ymd(w))) w.setDate(w.getDate() - 7);
+  let n = 0;
+  while (weeks.has(ymd(w))) { n++; w.setDate(w.getDate() - 7); }
+  return n;
+}
+// Bodyweight: one entry per date, sorted
+export function logBodyweight(list, date, kg) {
+  return [...list.filter((x) => x.date !== date), { date, kg: r2(kg) }].sort((a, b) => (a.date < b.date ? -1 : 1));
+}
+// 7-day trailing average per entry (window = entries dated within the 7 days up to and including it)
+export function movingAvg(list, days = 7) {
+  const t = (s) => new Date(s + 'T00:00:00').getTime();
+  return list.map((e) => {
+    const w = list.filter((x) => t(x.date) <= t(e.date) && t(e.date) - t(x.date) < days * 864e5);
+    return { date: e.date, kg: r2(w.reduce((a, x) => a + x.kg, 0) / w.length) };
+  });
+}
+// Change since ~30 days before the latest entry (falls back to the oldest entry in that window); null with < 2 entries
+export function change30(list) {
+  if (list.length < 2) return null;
+  const last = list[list.length - 1];
+  const cut = ymd(new Date(new Date(last.date + 'T00:00:00').getTime() - 30 * 864e5));
+  const ref = [...list].reverse().find((x) => x.date <= cut) || list.find((x) => x.date >= cut);
+  return ref === last ? null : r2(last.kg - ref.kg);
+}
