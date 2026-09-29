@@ -136,3 +136,34 @@ export function clampRotation(index, plan) {
   const n = plan.rotation.length;
   return n && index >= 0 && index < n ? index | 0 : 0;
 }
+
+// "This week": Mon–Sun (local time) dots for the week containing `now`; count = finished sessions in that week
+export function weekDots(sessions, now = new Date()) {
+  const mon = new Date(now.getFullYear(), now.getMonth(), now.getDate() - ((now.getDay() + 6) % 7));
+  const days = Array.from({ length: 7 }, (_, k) => ymd(new Date(mon.getFullYear(), mon.getMonth(), mon.getDate() + k)));
+  const done = days.map(() => 0);
+  for (const s of sessions) {
+    const k = days.indexOf(ymd(new Date(s.finishedAt || s.startedAt)));
+    if (k >= 0) done[k]++;
+  }
+  return { days: done.map((n) => n > 0), count: done.reduce((a, b) => a + b, 0), today: (now.getDay() + 6) % 7 };
+}
+
+// Entries may outnumber plan exercises after a mid-exercise swap (old entry stays, new one follows with the same slotId).
+// Returns the plan exercises aligned to entries; a superseded entry gets a distinct id and no superset link,
+// so partnerIndex/afterSet pair the superset with the live entry of the slot.
+export function alignedExs(exs, entries) {
+  return entries.map((e, i) => {
+    const x = exs.find((q) => q.id === e.slotId) || exs[i];
+    const old = entries.findLastIndex((q) => q.slotId === e.slotId) !== i;
+    return old ? { ...x, id: x.id + '#old', supersetWith: undefined } : x;
+  });
+}
+// Insert a fresh entry for the swapped exercise right after entry i (which is closed as-is).
+export function splitEntry(entries, i, repdbId, name, swapped) {
+  const e = entries[i];
+  e.done = true;
+  entries.splice(i + 1, 0, { slotId: e.slotId, repdbId, name, swapped, sets: [], done: false, skipped: false });
+  return i + 1;
+}
+export function shortName(name, n = 2) { return String(name || '').trim().split(/\s+/).slice(0, n).join(' '); }

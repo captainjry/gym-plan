@@ -222,3 +222,16 @@ html[data-dir=back]::view-transition-new(root) { animation-name: in-left; }
 body.has-update #view { padding-top: calc(76px + env(safe-area-inset-top, 0px)); }
 #toast { width: max-content; text-align: center; }
 [hidden] { display: none !important; }
+
+/* this-week card */
+.weekcard { display: flex; flex-direction: column; gap: 6px; height: 68px; justify-content: center; margin: 8px 0; padding: 0 16px; background: var(--card); border-radius: 14px; color: var(--text); text-decoration: none; }
+.wdots { display: flex; justify-content: space-between; }
+.wd { display: flex; flex-direction: column; align-items: center; gap: 2px; width: 28px; font-size: .68rem; line-height: 1; color: var(--muted); }
+.wd i { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--line); box-sizing: border-box; }
+.wd.on i { background: var(--accent); border-color: var(--accent); }
+.wd.now { color: var(--text); }
+.wd.now:not(.on) i { border-color: var(--muted); }
+.wcount { font-size: .85rem; color: var(--muted); line-height: 1.1; }
+.wcount b { color: var(--text); }
+.wcount span { float: right; color: var(--accent); }
+.exlist li .sspill { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

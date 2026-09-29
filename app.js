@@ -154,6 +154,7 @@ function today() {
   ${ip ? `<a class="banner" href="#workout" data-a="resume"><b>Resume workout</b><span>${esc(ipDay?.name)} · ${ip.entries.reduce((n, e) => n + e.sets.length, 0)} sets logged</span></a>` : ''}
   ${nudge ? `<a class="banner warn" href="#settings"><b>Back up your data</b><span>${nudge}</span></a>` : ''}
   <div id="planupd">${planUpdHtml()}</div>
+  ${weekHtml(p)}
   <div class="seg">${Object.values(S.plans).map((x) => `<button class="${x.id === p.id ? 'on' : ''}" data-a="plan" data-id="${x.id}">${esc(x.name)}</button>`).join('')}</div>
   <div class="chips">${p.rotation.map((id) => `<button class="chip ${id === dayId ? 'on' : ''}" data-a="day" data-id="${id}">${esc(dayOf(p, id).name)}${id === nextId ? ' <small>next</small>' : ''}</button>`).join('')}</div>
   <section class="card">
@@ -166,22 +167,29 @@ function today() {
     const ls = L.lastSetsFor(S.sessions, x.name);
     const up = L.progression(x, ls);
     return `<li><div><b>${esc(x.name)}</b>
-      <span class="muted">${x.sets} × ${x.repMin}–${x.repMax}${x.perSide ? ' · per side' : ''}${x.supersetWith ? ' <span class="tag sspill">SS</span>' : ''}</span></div>
+      <span class="muted">${x.sets} × ${x.repMin}–${x.repMax}${x.perSide ? ' · per side' : ''}${x.supersetWith ? ` <span class="tag sspill">SS ⇄ ${esc(L.shortName(d.exercises.find((q) => q.id === x.supersetWith)?.name))}</span>` : ''}</span></div>
       <div class="kgcol">${ls.length ? `last ${esc(L.fmtSet(ls[0]))}` : `start ${esc(L.fmtKg(x.startKg))}`}${up != null ? `<span class="up">↑ ${esc(L.fmtKg(up))}</span>` : ''}</div></li>`;
   }).join('')}</ol>
   <p class="credit">Exercise data by <a href="https://repdb.co">RepDB (repdb.co)</a></p>
   <div class="dock"><button class="btn primary big" data-a="start" data-plan="${p.id}" data-day="${d.id}">${ip ? 'Start new workout' : 'Start workout'}</button></div>`;
 }
 
+function weekHtml(p) {
+  const w = L.weekDots(S.sessions), goal = p.rotation.length;
+  const dots = w.days.map((on, k) => `<span class="wd ${on ? 'on' : ''} ${k === w.today ? 'now' : ''}"><i></i>${'MTWTFSS'[k]}</span>`).join('');
+  return `<a class="weekcard" href="#history" aria-label="${w.count} of ${goal} workouts this week, open history"><div class="wdots">${dots}</div><div class="wcount"><b>${w.count} / ${goal}</b> this week <span>History ›</span></div></a>`;
+}
+
 // ---------- Workout player ----------
 let draft = null; // {i, kg, reps} unsaved input values
 function slot(i) { // effective exercise for entry i (swaps keep the slot's targets)
   const ip = S.inProgress;
-  const x = dayOf(plan(ip.planId), ip.dayId).exercises[i];
   const e = ip.entries[i];
+  const x = dayOf(plan(ip.planId), ip.dayId).exercises.find((q) => q.id === e.slotId) || dayOf(plan(ip.planId), ip.dayId).exercises[i];
   if (!e.swapped) return { ...x, imgId: x.repdbImageId || x.repdbId, guideId: x.repdbId || x.repdbImageId, assist: x.startKg < 0 };
   return { ...x, name: e.name, startKg: null, noteTh: '', warmup: x.warmup, imgId: e.repdbId, guideId: e.repdbId, assist: /assist/.test(e.repdbId), swappedFrom: x.name };
 }
+const alignedExs = (ip) => L.alignedExs(dayOf(plan(ip.planId), ip.dayId).exercises, ip.entries);
 function startWorkout(planId, dayId) {
   const d = dayOf(plan(planId), dayId);
   S.inProgress = {
@@ -207,6 +215,7 @@ const setLabel = (e, x) => {
   return k <= x.sets ? `Set ${k} of ${x.sets}${k > 1 ? ' <span class="muted">(optional)</span>' : ''}` : `Extra set ${k}`;
 };
 const loggedHtml = (e) => e.sets.map((s, k) => `<span class="chip">${k + 1}: ${esc(L.fmtSet(s))}<button data-a="del-set" data-k="${k}" aria-label="delete set">×</button></span>`).join('');
+const hintHtml = (up, e) => (up != null && !e.sets.length ? `<p class="up big" id="hint">↑ Try ${esc(L.fmtKg(up))}${up < 0 ? '' : ' kg'}</p>` : '');
 const allDoneHtml = (on) => (on ? '<a class="banner" href="#summary"><b>All exercises done</b><span>Tap to review &amp; save</span></a>' : '');
 function formHtml({ i, e, x, pre }) {
   if (e.done || e.skipped) return `<div class="card center"><p>${e.skipped ? 'Skipped' : 'Exercise done ✓'}</p>
@@ -226,7 +235,7 @@ function workout() {
   const st = pstate(), { ip, i, e, x, ls, n, closed, allDone } = st;
   const d = dayOf(plan(ip.planId), ip.dayId);
   const up = L.progression(x, ls);
-  const p = L.partnerIndex(d.exercises, i);
+  const p = L.partnerIndex(alignedExs(ip), i);
   return `
   <header class="phead">
     <button class="btn ghost small" data-a="back">‹ Today</button>
@@ -245,14 +254,14 @@ function workout() {
     ${x.noteTh ? `<p class="th note clamp" data-a="more">${esc(x.noteTh)}</p>` : ''}
     <div class="lastrow"><span class="last">Last time: ${ls.length ? esc(ls.map(L.fmtSet).join(', ')) : '—'}</span>
       <span class="setlabel" id="setlabel" ${e.done || e.skipped ? 'hidden' : ''}>${setLabel(e, x)}</span></div>
-    ${up != null && !e.sets.length ? `<p class="up big" id="hint">↑ Try ${esc(L.fmtKg(up))}${up < 0 ? '' : ' kg'}</p>` : ''}
+    ${hintHtml(up, e)}
     <div class="logged" id="logged">${loggedHtml(e)}</div>
     <div id="form">${formHtml(st)}</div>
   </section>
   <div class="dock">
     <div class="navrow">
       <button class="btn" data-a="prev" ${i === 0 ? 'disabled' : ''}>‹ Prev</button>
-      <button class="btn" data-a="swap" id="swap-btn" ${e.sets.length ? 'disabled' : ''}>Swap</button>
+      <button class="btn" data-a="swap" id="swap-btn">Swap</button>
       <button class="btn" data-a="guide">Guide</button>
       <button class="btn" data-a="skip" id="skip-btn" ${e.done || e.skipped ? 'disabled' : ''}>Skip</button>
       <button class="btn" data-a="next" ${i === n - 1 ? 'disabled' : ''}>Next ›</button>
@@ -266,10 +275,10 @@ function patchPlayer(formKindChanged) {
   const st = pstate(), { e, x, n, closed, allDone, pre } = st;
   $('#logged').innerHTML = loggedHtml(e);
   $('#hint')?.remove();
+  $('#logged').insertAdjacentHTML('beforebegin', hintHtml(L.progression(x, st.ls), e));
   $('#prog').style.transform = `scaleX(${closed / n})`;
   $('#alldone').innerHTML = allDoneHtml(allDone);
   $('#finish-link').classList.toggle('primary', allDone);
-  $('#swap-btn').disabled = e.sets.length > 0;
   $('#skip-btn').disabled = e.done || e.skipped;
   $('#done-btn').hidden = e.done || e.skipped;
   $('#setlabel').innerHTML = setLabel(e, x);
@@ -312,7 +321,7 @@ function doneSet() {
   e.sets.push({ kg: v.kg, reps: v.reps, at: now() });
   if (e.sets.length >= x.sets) e.done = true;
   const d = dayOf(plan(ip.planId), ip.dayId);
-  const { next, rest } = L.afterSet(d.exercises, ip.entries, i);
+  const { next, rest } = L.afterSet(alignedExs(ip), ip.entries, i);
   ip.cur = next;
   ip.rest = rest ? { endsAt: Date.now() + x.restSec * 1000, total: x.restSec * 1000 } : null;
   restEnter = rest; draft = null; save();
@@ -322,9 +331,8 @@ function doneSet() {
 }
 function preloadNext() { // warm the images of whatever can come next
   const ip = S.inProgress; if (!ip || !DB) return;
-  const exs = dayOf(plan(ip.planId), ip.dayId).exercises;
-  for (const j of new Set([L.partnerIndex(exs, ip.cur), L.nextOpen(ip.entries, ip.cur), ip.cur + 1]))
-    if (j >= 0 && j < exs.length && j !== ip.cur) preloadImgs(slot(j).imgId);
+  for (const j of new Set([L.partnerIndex(alignedExs(ip), ip.cur), L.nextOpen(ip.entries, ip.cur), ip.cur + 1]))
+    if (j >= 0 && j < ip.entries.length && j !== ip.cur) preloadImgs(slot(j).imgId);
 }
 function go(i) {
   if (i === S.inProgress.cur) { save(); return patchPlayer(true); }
@@ -383,9 +391,10 @@ function guideSheet(id, x) {
     <a class="btn big" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=${q}">Watch on YouTube</a>
     <p class="credit">Exercise data by <a href="https://repdb.co">RepDB (repdb.co)</a></p>`);
 }
+const planEx = (ip, e) => dayOf(plan(ip.planId), ip.dayId).exercises.find((q) => q.id === e.slotId);
 function swapSheet() {
   const ip = S.inProgress, i = ip.cur, e = ip.entries[i];
-  const x = dayOf(plan(ip.planId), ip.dayId).exercises[i];
+  const x = planEx(ip, e);
   const opt = (id, name, orig) => `<button class="swapopt" data-a="swap-to" data-id="${id ?? ''}" ${orig ? 'data-orig="1"' : ''}>
     ${pics(id || x.repdbImageId, 'small')}<span>${esc(name)}${orig ? ' <small>(plan)</small>' : ''}</span></button>`;
   sheet(`<button class="btn small close" data-a="close">Close</button><h2>Swap for this session</h2>
@@ -505,16 +514,18 @@ async function checkPlanUpdates() {
 function planUpdHtml() {
   return Object.entries(planUpd).map(([id, f]) => {
     const busy = S.inProgress?.planId === id;
+    const mod = S.plans[id]?.modified === true;
     return `<section class="card upd"><p><b>New version of ${esc(S.plans[id]?.name || f.name)} available</b> (v${esc(f.version)})</p>
+      ${mod ? `<p class="warn-text">You've edited this plan — updating replaces your edits (history is kept).</p>` : ''}
       ${busy ? '<p class="muted">Finish the current workout to update.</p>' : ''}
       <div class="row"><button class="btn" data-a="plan-keep" data-id="${id}">Keep mine</button>
-      <button class="btn primary" data-a="plan-update" data-id="${id}" ${busy ? 'disabled' : ''}>Update</button></div></section>`;
+      <button class="btn ${mod ? 'danger' : 'primary'}" data-a="plan-update" data-id="${id}" ${busy ? 'disabled' : ''}>${mod ? 'Replace with new version' : 'Update'}</button></div></section>`;
   }).join('');
 }
 function applyPlanUpdate(id) {
   if (S.inProgress?.planId === id) return; // slot() reads the live plan by position
   const f = planUpd[id];
-  S.plans[id] = { ...f, id, source: DEFAULT_PLANS[id] };
+  S.plans[id] = { ...f, id, source: DEFAULT_PLANS[id], modified: false };
   S.rotation[id] = L.clampRotation(S.rotation[id] || 0, S.plans[id]);
   delete planUpd[id];
   if (save()) toast('Plan updated');
@@ -560,10 +571,16 @@ document.addEventListener('click', (ev) => {
     guide: () => { const x = slot(ip.cur); guideSheet(x.guideId, x); },
     swap: swapSheet,
     'swap-to': () => {
-      const e = ip.entries[ip.cur], x = dayOf(plan(ip.planId), ip.dayId).exercises[ip.cur];
-      if (t.dataset.orig) Object.assign(e, { repdbId: x.repdbId, name: x.name, swapped: false });
-      else Object.assign(e, { repdbId: t.dataset.id, name: DB?.get(t.dataset.id)?.name_en || t.dataset.id, swapped: true });
-      draft = null; save(); closeSheet(() => transition(render));
+      const e = ip.entries[ip.cur], x = planEx(ip, e);
+      const to = t.dataset.orig ? { repdbId: x.repdbId, name: x.name, swapped: false }
+        : { repdbId: t.dataset.id, name: DB?.get(t.dataset.id)?.name_en || t.dataset.id, swapped: true };
+      const apply = () => {
+        if (e.sets.length) ip.cur = L.splitEntry(ip.entries, ip.cur, to.repdbId, to.name, to.swapped); // sets stay under the old exercise
+        else Object.assign(e, to);
+        ip.rest = null; draft = null; save(); transition(render);
+      };
+      if (!e.sets.length) return closeSheet(apply);
+      closeSheet(() => ask(`Switch to ${esc(to.name)}? The ${e.sets.length} logged set${e.sets.length > 1 ? 's' : ''} ${e.sets.length > 1 ? "stay" : "stays"} under ${esc(e.name)}.`, 'Switch', apply, false));
     },
     'rest-15': () => { ip.rest.endsAt -= 15000; save(); tick(); },
     'rest+15': () => { ip.rest.endsAt += 15000; ip.rest.total = Math.max(ip.rest.total, ip.rest.endsAt - Date.now()); save(); tick(); },
@@ -572,7 +589,9 @@ document.addEventListener('click', (ev) => {
     discard: () => ask('Discard this workout? Logged sets will be lost.', 'Discard', () => leaveWorkout('Workout discarded')),
     backup: downloadBackup,
     update: () => { if (!newSW) return; reloading = true; newSW.postMessage('skipWaiting'); },
-    'plan-update': () => applyPlanUpdate(t.dataset.id),
+    'plan-update': () => S.plans[t.dataset.id]?.modified === true
+      ? ask('Replace your edited plan with the new version? Your edits are lost; workout history is kept.', 'Replace', () => applyPlanUpdate(t.dataset.id))
+      : applyPlanUpdate(t.dataset.id),
     'plan-keep': () => { (S.settings.dismissedPlanVersion ||= {})[t.dataset.id] = planUpd[t.dataset.id].version; delete planUpd[t.dataset.id]; save(); $('#planupd').innerHTML = planUpdHtml(); },
   }[a];
   if (act) { ev.preventDefault(); act(); return; }
