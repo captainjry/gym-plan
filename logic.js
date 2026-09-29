@@ -136,3 +136,109 @@ export function clampRotation(index, plan) {
   const n = plan.rotation.length;
   return n && index >= 0 && index < n ? index | 0 : 0;
 }
+
+// ---------- Plan editor helpers ----------
+export function slug(name, taken = []) {
+  const base = String(name || '').toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'plan';
+  const t = new Set(taken);
+  let id = base, n = 2;
+  while (t.has(id)) id = `${base}-${n++}`;
+  return id;
+}
+// Move arr[i] by dir (-1/+1) in place; returns true if moved
+export function moveItem(arr, i, dir) {
+  const j = i + dir;
+  if (i < 0 || i >= arr.length || j < 0 || j >= arr.length) return false;
+  [arr[i], arr[j]] = [arr[j], arr[i]];
+  return true;
+}
+// First {...} block of pasted text (tolerates ```json fences and prose); string-aware brace matching. → parsed object or null
+export function extractJson(text) {
+  const s = String(text || '');
+  for (let a = s.indexOf('{'); a >= 0; a = s.indexOf('{', a + 1)) {
+    let depth = 0, str = false;
+    for (let i = a; i < s.length; i++) {
+      const c = s[i];
+      if (str) { if (c === '\\') i++; else if (c === '"') str = false; continue; }
+      if (c === '"') str = true;
+      else if (c === '{') depth++;
+      else if (c === '}' && --depth === 0) {
+        try { return JSON.parse(s.slice(a, i + 1)); } catch { break; }
+      }
+    }
+  }
+  return null;
+}
+// Mirrors check_plan.py. dbIds: Set of RepDB ids or null (not loaded → id checks skipped).
+// → { errors, warnings, plan } where plan is a normalised deep copy (unknown ids nulled, duplicate ex ids suffixed)
+export function validatePlan(input, dbIds = null) {
+  const errors = [], warnings = [];
+  if (!input || typeof input !== 'object' || Array.isArray(input)) return { errors: ['Not a plan object'], warnings, plan: null };
+  const plan = JSON.parse(JSON.stringify(input));
+  if (typeof plan.name !== 'string' || !plan.name.trim()) errors.push('Missing plan name');
+  if (!Array.isArray(plan.days) || !plan.days.length) { errors.push('Missing days list'); return { errors, warnings, plan }; }
+  const num = (v) => (v === '' || v == null ? NaN : Number(v));
+  const known = (id) => !dbIds || dbIds.has(id);
+  const seenDay = new Set(), seenEx = new Set();
+  for (const day of plan.days) {
+    if (!day || typeof day !== 'object' || typeof day.id !== 'string' || !day.id) { errors.push('A day has no id'); continue; }
+    if (seenDay.has(day.id)) errors.push(`Duplicate day id '${day.id}'`);
+    seenDay.add(day.id);
+    if (typeof day.name !== 'string' || !day.name) errors.push(`Day ${day.id}: missing name`);
+    day.nameTh ??= ''; day.focus ??= '';
+    if (!Array.isArray(day.exercises)) { errors.push(`Day ${day.id}: missing exercises list`); continue; }
+    const dayIds = new Set(day.exercises.map((x) => x?.id));
+    for (const ex of day.exercises) {
+      if (!ex || typeof ex !== 'object' || typeof ex.id !== 'string' || !ex.id) { errors.push(`Day ${day.id}: an exercise has no id`); continue; }
+      const loc = `${day.id}/${ex.id}`;
+      if (seenEx.has(ex.id)) {
+        let n = 2; while (seenEx.has(`${ex.id}-${n}`) || dayIds.has(`${ex.id}-${n}`)) n++;
+        warnings.push(`${loc}: duplicate exercise id, renamed to '${ex.id}-${n}'`);
+        ex.id = `${ex.id}-${n}`;
+      }
+      seenEx.add(ex.id);
+      if (typeof ex.name !== 'string' || !ex.name.trim()) errors.push(`${loc}: missing name`);
+      ex.sets = num(ex.sets); ex.repMin = num(ex.repMin); ex.repMax = num(ex.repMax);
+      if (!(ex.sets >= 1)) errors.push(`${loc}: sets must be >= 1`);
+      if (!Number.isFinite(ex.repMin) || !Number.isFinite(ex.repMax)) errors.push(`${loc}: repMin/repMax must be numbers`);
+      else if (ex.repMin > ex.repMax) errors.push(`${loc}: repMin ${ex.repMin} > repMax ${ex.repMax}`);
+      ex.restSec = Number.isFinite(num(ex.restSec)) ? num(ex.restSec) : 90;
+      ex.startKg = Number.isFinite(num(ex.startKg)) ? num(ex.startKg) : null;
+      ex.stepKg = Number.isFinite(num(ex.stepKg)) ? num(ex.stepKg) : null;
+      ex.rir = ex.rir == null ? '0–1' : String(ex.rir);
+      ex.warmup ??= ''; ex.noteTh ??= '';
+      ex.primary = Array.isArray(ex.primary) ? ex.primary : [];
+      for (const k of ['repdbId', 'repdbImageId']) {
+        if (ex[k] == null) { ex[k] = null; continue; }
+        if (!known(ex[k])) { warnings.push(`${loc}: ${k} '${ex[k]}' not found in RepDB, cleared`); ex[k] = null; }
+      }
+      ex.alternatives = (Array.isArray(ex.alternatives) ? ex.alternatives : []).filter((a) => {
+        if (known(a)) return true;
+        warnings.push(`${loc}: alternative '${a}' not found in RepDB, removed`); return false;
+      });
+      if (ex.supersetWith != null && !dayIds.has(ex.supersetWith)) errors.push(`${loc}: supersetWith '${ex.supersetWith}' not a valid exercise id in day ${day.id}`);
+      if (ex.supersetWith == null) delete ex.supersetWith;
+    }
+  }
+  const dayList = plan.days.map((d) => d?.id).filter(Boolean);
+  if (!Array.isArray(plan.rotation) || !plan.rotation.length) { plan.rotation = dayList; warnings.push('No rotation given, using day order'); }
+  else if (plan.rotation.some((r) => !dayList.includes(r))) { plan.rotation = plan.rotation.filter((r) => dayList.includes(r)); warnings.push('Rotation had unknown day ids, removed'); if (!plan.rotation.length) plan.rotation = dayList; }
+  return { errors, warnings, plan };
+}
+// Up to n RepDB ids sharing a primary muscle with `target` (a RepDB entry), allowed equipment only. exercises: RepDB array.
+export function pickAlternatives(exercises, target, allowed, n = 3, skip = []) {
+  if (!target) return [];
+  const mus = new Set(target.primary_muscles || []);
+  const skipSet = new Set([target.id, ...skip]);
+  return exercises
+    .filter((e) => !skipSet.has(e.id) && allowed(e) && (e.primary_muscles || []).some((m) => mus.has(m)))
+    .map((e) => ({ id: e.id, s: (e.primary_muscles || []).filter((m) => mus.has(m)).length * 2 + (e.primary_muscles?.[0] === target.primary_muscles?.[0] ? 3 : 0) + (e.equipment === target.equipment ? 1 : 0) }))
+    .sort((a, b) => b.s - a.s || (a.id < b.id ? -1 : 1))
+    .slice(0, n).map((x) => x.id);
+}
+// Unique id within taken (Set/array): base, base-2, ...
+export function uniqueId(base, taken) {
+  const t = new Set(taken); let id = base, n = 2;
+  while (t.has(id)) id = `${base}-${n++}`;
+  return id;
+}
