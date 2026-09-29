@@ -3,7 +3,7 @@ const APP_VERSION = '2';
 const SHELL = `gp-shell-${APP_VERSION}`;
 const RUNTIME = 'gp-runtime'; // RepDB JSON/images + fonts: kept across app versions (offline pictures)
 const FILES = ['./', 'index.html', 'style.css', 'app.js', 'logic.js', 'manifest.webmanifest',
-  'history.js', 'plan.js', 'explore.js',
+  'history.js', 'plan.js', 'explore.js', 'history.css', 'plan.css', 'explore.css',
   'icons/icon-192.png', 'icons/icon-512.png', 'plans/upperlower.json', 'plans/ppl.json'];
 
 // No skipWaiting here: a new version waits until the user taps the update bar.
