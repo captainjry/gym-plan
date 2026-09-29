@@ -1,6 +1,6 @@
 :root {
-  --bg: #0f1211; --card: #171c1b; --card2: #1f2624; --line: #2a3331;
-  --text: #e8efec; --muted: #8fa19b; --accent: #69e4ba; --accent-ink: #06241a;
+  --bg: #0e0f13; --card: #17181f; --card2: #20222b; --line: #2c2f3b;
+  --text: #eceef4; --muted: #9a9fb2; --accent: #a78bfa; --accent-ink: #160d33;
   --warn: #f2c14e; --danger: #ff6b6b;
   --tabh: 64px; --sb: env(safe-area-inset-bottom, 0px);
   color-scheme: dark;
@@ -47,7 +47,7 @@ p { margin: 6px 0; }
 .row > * { flex: 1; }
 
 /* banners, segmented control, chips */
-.banner { display: block; background: #12352a; border: 1px solid var(--accent); color: var(--text); border-radius: 14px; padding: 12px 16px; margin: 8px 0; text-decoration: none; }
+.banner { display: block; background: #211a3a; border: 1px solid var(--accent); color: var(--text); border-radius: 14px; padding: 12px 16px; margin: 8px 0; text-decoration: none; }
 .banner b { display: block; color: var(--accent); }
 .banner span { font-size: .9rem; color: var(--muted); }
 .banner.warn { background: #33290f; border-color: var(--warn); }
@@ -80,7 +80,7 @@ p { margin: 6px 0; }
 /* bottom tabs + dock */
 #tabs {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; display: flex; justify-content: center;
-  background: #0b0e0d; border-top: 1px solid var(--line); padding-bottom: var(--sb);
+  background: #0b0c10; border-top: 1px solid var(--line); padding-bottom: var(--sb);
 }
 #tabs a { flex: 1; max-width: 104px; height: var(--tabh); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: var(--muted); text-decoration: none; font-size: .75rem; }
 #tabs a svg { width: 24px; height: 24px; fill: currentColor; }
@@ -141,7 +141,7 @@ body.workout #view { padding-bottom: calc(132px + var(--sb)); } /* = dock height
 /* rest overlay */
 #rest {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; max-width: 520px; margin: 0 auto;
-  background: #101a17; border-top: 2px solid var(--accent); border-radius: 20px 20px 0 0;
+  background: #15131f; border-top: 2px solid var(--accent); border-radius: 20px 20px 0 0;
   padding: 14px 16px calc(14px + var(--sb)); text-align: center; box-shadow: 0 -10px 40px #000a;
 }
 .restlabel { color: var(--muted); text-transform: uppercase; letter-spacing: .15em; font-size: .85rem; }

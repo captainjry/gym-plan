@@ -1,4 +1,10 @@
 import * as L from './logic.js';
+import * as HistoryMod from './history.js';
+import * as PlanMod from './plan.js';
+import * as ExploreMod from './explore.js';
+// Phase-2 screens live in their own modules: each exports render(ctx) → html, optional mount(ctx) after render,
+// optional actions {name: (el, ctx, ev) => …} for data-a clicks, optional onInput(ev, ctx) / onChange(ev, ctx).
+const MODS = { history: HistoryMod, plan: PlanMod, explore: ExploreMod };
 
 const KEY = 'gp.v1';
 const DATA = 'https://exercise-dataset.com/';
@@ -125,8 +131,10 @@ function render() {
   if (inWorkout && !S.inProgress) { history.replaceState({ n: curN }, '', '#today'); r = 'today'; }
   document.body.classList.toggle('workout', r === 'workout' || r === 'summary');
   document.querySelectorAll('#tabs a').forEach((a) => a.classList.toggle('on', a.dataset.tab === r));
-  const v = { today, history: historyTab, plan: planTab, explore, settings, workout, summary }[r] || today;
+  const mod = MODS[r];
+  const v = mod ? () => mod.render(ctx) : ({ today, settings, workout, summary }[r] || today);
   $('#view').innerHTML = v();
+  mod?.mount?.(ctx);
   showUpdateBar();
   if (r === 'workout') { lockOn(); preloadNext(); } else if (r !== 'summary') lockOff();
 }
@@ -417,20 +425,6 @@ function leaveWorkout(msg) {
   if (b?.tab === TAB && curN > b.n) { afterPop = done; history.go(b.n - curN); } else done();
 }
 
-// ---------- other tabs ----------
-function historyTab() {
-  const rows = S.sessions.slice().reverse().map((s) => {
-    const sets = s.entries.reduce((n, e) => n + e.sets.length, 0);
-    const mins = Math.round((new Date(s.finishedAt) - new Date(s.startedAt)) / 60000);
-    return `<li><div><b>${esc(s.dayName || s.dayId)}</b><span class="muted">${esc(S.plans[s.planId]?.name || s.planId)}</span></div>
-      <div class="kgcol">${fmtDate(s.finishedAt)}<span class="muted">${s.entries.length} ex · ${sets} sets · ${mins} min</span></div></li>`;
-  });
-  return `<h1 class="pad">History</h1>${rows.length ? `<ol class="exlist">${rows.join('')}</ol>` : '<p class="muted pad">No finished workouts yet.</p>'}
-  <p class="muted pad">Charts, PRs and streak calendar are coming in phase 2.</p>`;
-}
-const soon = (t) => () => `<h1 class="pad">${t}</h1><section class="card"><p class="muted">Coming in phase 2.</p></section><p class="credit">Exercise data by <a href="https://repdb.co">RepDB (repdb.co)</a></p>`;
-const planTab = soon('Plan'), explore = soon('Explore');
-
 function backupNudge() {
   if (!S.sessions.length) return '';
   const b = S.settings.lastBackupAt;
@@ -581,7 +575,9 @@ document.addEventListener('click', (ev) => {
     'plan-update': () => applyPlanUpdate(t.dataset.id),
     'plan-keep': () => { (S.settings.dismissedPlanVersion ||= {})[t.dataset.id] = planUpd[t.dataset.id].version; delete planUpd[t.dataset.id]; save(); $('#planupd').innerHTML = planUpdHtml(); },
   }[a];
-  if (act) { ev.preventDefault(); act(); }
+  if (act) { ev.preventDefault(); act(); return; }
+  const mact = Object.values(MODS).map((m) => m.actions?.[a]).find(Boolean);
+  if (mact) { ev.preventDefault(); mact(t, ctx, ev); }
 });
 function bump(field, dir) {
   const inp = $('#' + field); if (!inp) return;
@@ -592,9 +588,17 @@ function bump(field, dir) {
   saveDraft();
 }
 function saveDraft() { if ($('#kg') || $('#reps')) draft = { i: S.inProgress.cur, kg: $('#kg')?.value ?? '', reps: $('#reps')?.value ?? '' }; }
-document.addEventListener('input', (ev) => { if (ev.target.id === 'kg' || ev.target.id === 'reps') saveDraft(); });
-document.addEventListener('change', (ev) => { if (ev.target.id === 'restore' && ev.target.files[0]) { restoreFile(ev.target.files[0]); ev.target.value = ''; } });
+document.addEventListener('input', (ev) => { if (ev.target.id === 'kg' || ev.target.id === 'reps') return saveDraft(); MODS[route()]?.onInput?.(ev, ctx); });
+document.addEventListener('change', (ev) => { if (ev.target.id === 'restore' && ev.target.files[0]) { restoreFile(ev.target.files[0]); ev.target.value = ''; return; } MODS[route()]?.onChange?.(ev, ctx); });
 document.addEventListener('focusin', (ev) => { if (ev.target.matches?.('#kg,#reps')) { ev.target.select(); setTimeout(() => ev.target.scrollIntoView({ block: 'center' }), 250); } });
+
+// ---------- shared context handed to the phase-2 modules ----------
+const ctx = {
+  get S() { return S; }, save, L, DATA, esc, now, fmtDate, daysAgo,
+  toast, sheet, closeSheet, ask, nav, goBack, parts, route,
+  rerender: (dir = 'fade') => transition(render, dir),
+  plan, dayOf, defaultPlans, db, get DB() { return DB; }, img, pics, preloadImgs,
+};
 
 // ---------- boot ----------
 (async function init() {
