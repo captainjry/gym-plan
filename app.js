@@ -49,9 +49,10 @@ function db() {
   }).catch(() => { dbReq = null; });
   return dbReq;
 }
-const img = (id, which) => { const f = DB?.get(id)?.images?.flat; return f ? DATA + f[which] : null; };
+// 134 RepDB entries (holds/stretches) have a single `main` pose instead of start/peak
+const img = (id, which) => { const f = DB?.get(id)?.images?.flat; const p = f && (f[which] || (which === 'start' ? f.main : null)); return p ? DATA + p : null; };
 // Fixed square boxes (CSS aspect-ratio); skeleton spans until the dataset is known
-const picImgs = (id) => ['start', 'peak'].map((w) => {
+const picImgs = (id) => (DB?.get(id)?.images?.flat?.main ? ['start'] : ['start', 'peak']).map((w) => {
   const u = img(id, w);
   return u ? `<img crossorigin="anonymous" alt="" decoding="async" src="${u}">` : '<span class="ph"></span>';
 }).join('');
