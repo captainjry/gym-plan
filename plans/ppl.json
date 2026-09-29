@@ -1,6 +1,6 @@
 {
  "name": "Push / Legs / Pull / Full Body",
- "version": 2,
+ "version": 3,
  "createdAt": "2026-09-29",
  "nutrition": {
   "kcal": 2750,
@@ -482,7 +482,7 @@
    "exercises": [
     {
      "id": "pl-1",
-     "name": "Supinated Lat Pulldown (medium grip, lean back ~45°)",
+     "name": "Supinated Lat Pulldown (45° grip, shoulder width)",
      "repdbId": "reverse-grip-lat-pulldown",
      "repdbImageId": null,
      "alternatives": [
@@ -501,7 +501,7 @@
      "restSec": 120,
      "startKg": 32.5,
      "stepKg": 2.5,
-     "noteTh": "จับหงายมือ (supinated) ห่างกันประมาณไหล่ เอนตัวไปด้านหลังประมาณ 45° ดึงศอกลงข้างลำตัว บาร์ลงถึงอกบน ปล่อยขึ้นให้สุดให้แลตยืด"
+     "noteTh": "จับหงายมือแบบเฉียง ~45° (กึ่งกลางระหว่างมือหันเข้าหากันกับหงายมือเต็ม) ห่างเท่าไหล่ ลำตัวตั้งเกือบตรง เอนหลังเล็กน้อยพอ ดึงศอกลงข้างลำตัว บาร์ลงถึงอกบน ปล่อยขึ้นให้สุดให้แลตยืด"
     },
     {
      "id": "pl-2",
