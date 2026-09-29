@@ -95,14 +95,14 @@ function main(ctx) {
   const sorted = [...ss].sort((a, b) => (a.startedAt < b.startedAt ? 1 : -1));
   const recs = L.records(ss);
   const q = st.q.trim().toLowerCase();
-  return `<h1 class="pad">History</h1>${weekCard(S, L)}${calCard(S, L)}
+  return `<h1 class="pad">History</h1><div class="cols"><div class="c1">${weekCard(S, L)}${calCard(S, L)}</div><div class="c2">
     <h3 class="pad">Sessions</h3><ul class="hlist">${sorted.slice(0, st.shown).map((s) => sessionRow(s, S)).join('')}</ul>
     ${sorted.length > st.shown ? `<button class="btn ghost" style="width:100%" data-a="h-more">Show more (${sorted.length - st.shown})</button>` : ''}
     <h3 class="pad">Exercises</h3>
     <input id="h-q" class="hsearch" type="search" placeholder="Search exercises" value="${e(st.q)}" autocomplete="off">
     <ul class="hlist" id="h-exlist">${recs.map((r) => `<li data-n="${e(r.name.toLowerCase())}"${q && !r.name.toLowerCase().includes(q) ? ' hidden' : ''}><button class="hrow" data-a="h-ex" data-n="${e(encodeURIComponent(r.name))}"><span class="hmain"><b>${e(r.name)}</b></span><span class="muted hside">${fmtRec(r.kind, r.heaviest, L)}</span></button></li>`).join('')}</ul>
-    <details class="card hrec"><summary>Records</summary><ul class="hlist">${recs.map((r) => `<li class="hrecrow"><b>${e(r.name)}</b><span>${r.kind === 'w' ? 'Heaviest' : 'Best'} ${fmtRec(r.kind, r.heaviest, L)}</span>${r.e1rm ? `<span>e1RM ${Math.round(L.e1rm(r.e1rm.kg, r.e1rm.reps) * 10) / 10} kg</span>` : ''}<span class="muted">${short(r.date)}</span></li>`).join('')}</ul></details>
-    ${bw}`;
+    <details class="card hrec"><summary>Records</summary><ul class="hlist">${recs.map((r) => `<li class="hrecrow"><b>${e(r.name)}</b><span>${r.kind === 'w' ? 'Heaviest' : 'Best'} ${fmtRec(r.kind, r.heaviest, L)}</span>${r.e1rm ? `<span>e1RM ${Math.round(L.e1rm(r.e1rm.kg, r.e1rm.reps) * 10) / 10} kg</span>` : ''}<span class="muted">${short(r.date)}</span></li>`).join('')}</ul></details></div>
+    ${bw}</div>`;
 }
 
 function sessionView(ctx, id) {

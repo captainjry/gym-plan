@@ -103,13 +103,13 @@ function refresh() { // data arrived / filters changed: patch lists + heat only
 
 function mapHtml() {
   const h = heat();
-  return `<div class="xmap">
+  return `<div class="cols x"><div class="c1"><div class="xmap">
     <svg id="x-svg" viewBox="28 4 144 406" role="img" aria-label="Body map, ${st.side}">${figure(st.side, h)}</svg>
     <div class="xside"><button class="${st.side === 'front' ? 'on' : ''}" data-a="x-side" data-s="front">Front</button><button class="${st.side === 'back' ? 'on' : ''}" data-a="x-side" data-s="back">Back</button></div>
     <div class="xlegend"><span><i class="lg on"></i>Selected</span><span><i class="lg h1"></i>Trained, last 7 days</span></div>
-  </div>
+  </div></div><div class="c2">
   <div class="xchips" id="x-chips">${C.L.REGIONS.map((r) => `<button class="chip${r.id === st.region ? ' on' : ''}" data-a="x-reg" data-r="${r.id}">${r.name}</button>`).join('')}</div>
-  <div id="x-panel">${panelHtml()}</div>`;
+  <div id="x-panel">${panelHtml()}</div></div></div>`;
 }
 const skel = () => `<div class="xlist">${'<div class="xrow"><span class="xth sk"></span><span class="xn"><span class="sk"></span><span class="sk short"></span></span></div>'.repeat(4)}</div>`;
 const offline = () => '<p class="muted">The exercise list loads once you are online.</p>';

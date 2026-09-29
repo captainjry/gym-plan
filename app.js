@@ -133,6 +133,7 @@ function render() {
   const inWorkout = r === 'workout' || r === 'summary';
   if (inWorkout && !S.inProgress) { history.replaceState({ n: curN }, '', '#today'); r = 'today'; }
   document.body.classList.toggle('workout', r === 'workout' || r === 'summary');
+  document.body.dataset.r = r; document.body.toggleAttribute('data-sub', r !== 'today' && parts().length > 1); // desktop CSS hooks
   document.querySelectorAll('#tabs a').forEach((a) => a.classList.toggle('on', a.dataset.tab === r));
   const mod = MODS[r];
   const v = mod ? () => mod.render(ctx) : ({ today, settings, workout, summary }[r] || today);
