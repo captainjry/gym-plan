@@ -1,0 +1,868 @@
+{
+ "name": "Upper / Lower",
+ "version": 1,
+ "createdAt": "2026-09-28",
+ "nutrition": {
+  "kcal": 2750,
+  "proteinG": 130,
+  "note": "Lean bulk: ~+225 kcal over TDEE (~2,524). Protein ~2 g/kg. Target +0.25–0.5 kg/month on the weekly average weight; if the average is flat for 3 weeks, add ~150 kcal/day. Week 1 startKg = ~90% of old weights (1 week off); from week 2 run normal double progression."
+ },
+ "rotation": [
+  "UA",
+  "LA",
+  "UB",
+  "LB"
+ ],
+ "days": [
+  {
+   "id": "UA",
+   "name": "Upper A",
+   "nameTh": "ท่อนบน A (เน้นอกบน + ดึงแนวตั้ง)",
+   "focus": "Chest priority (incline) + vertical pull",
+   "exercises": [
+    {
+     "id": "ua-1",
+     "name": "Hammer Incline Press",
+     "repdbId": null,
+     "repdbImageId": "smith-machine-incline-bench-press",
+     "alternatives": [
+      "incline-db-press",
+      "smith-machine-incline-bench-press",
+      "incline-bench-press"
+     ],
+     "primary": [
+      "upper chest"
+     ],
+     "warmup": "2–3 ramp sets: ~50%×10, ~70%×6, ~85%×3",
+     "sets": 2,
+     "repMin": 6,
+     "repMax": 10,
+     "rir": "0–1",
+     "restSec": 150,
+     "startKg": 32.5,
+     "stepKg": 2.5,
+     "noteTh": "ปรับเบาะให้ด้ามจับอยู่ระดับอกบน บีบสะบักลงล่าง อกเปิด ลงช้า 2–3 วิให้อกยืดสุด ดันขึ้นไม่ต้องล็อกศอก"
+    },
+    {
+     "id": "ua-2",
+     "name": "Supinated Lat Pulldown (medium grip, lean back ~45°)",
+     "repdbId": "reverse-grip-lat-pulldown",
+     "repdbImageId": null,
+     "alternatives": [
+      "assisted-pull-ups",
+      "close-grip-lat-pulldown",
+      "one-arm-lat-pulldown"
+     ],
+     "primary": [
+      "lats"
+     ],
+     "warmup": "1–2 × 8–10 light",
+     "sets": 2,
+     "repMin": 8,
+     "repMax": 12,
+     "rir": "0–1",
+     "restSec": 120,
+     "startKg": 32.5,
+     "stepKg": 2.5,
+     "noteTh": "จับหงายมือ (supinated) ห่างกันประมาณไหล่ เอนตัวไปด้านหลังประมาณ 45° ดึงศอกลงข้างลำตัว บาร์ลงถึงอกบน ปล่อยขึ้นให้สุดให้แลตยืด"
+    },
+    {
+     "id": "ua-3",
+     "name": "Machine Chest Press (pin-stack, flat)",
+     "repdbId": "chest-press-machine",
+     "repdbImageId": null,
+     "alternatives": [
+      "db-bench-press",
+      "smith-machine-bench-press",
+      "cable-chest-press"
+     ],
+     "primary": [
+      "chest"
+     ],
+     "warmup": "1 × 6–8 @ ~60%",
+     "sets": 2,
+     "repMin": 8,
+     "repMax": 12,
+     "rir": "0–1",
+     "restSec": 120,
+     "startKg": 27.5,
+     "stepKg": 2.5,
+     "noteTh": "ปรับเบาะให้ด้ามอยู่ระดับกลางอก หลังติดเบาะ สะบักบีบไว้ตลอด ดันออกแล้วคุมตอนกลับ ไม่กระแทก"
+    },
+    {
+     "id": "ua-4",
+     "name": "Chest-Supported T-Bar Row",
+     "repdbId": "t-bar-row",
+     "repdbImageId": "chest-supported-db-row",
+     "alternatives": [
+      "seated-cable-row",
+      "chest-supported-db-row",
+      "chest-supported-smith-machine-row"
+     ],
+     "primary": [
+      "mid back",
+      "lats"
+     ],
+     "warmup": "1–2 × 8–10 light",
+     "sets": 2,
+     "repMin": 8,
+     "repMax": 12,
+     "rir": "0–1",
+     "restSec": 120,
+     "startKg": 20,
+     "stepKg": 2.5,
+     "noteTh": "อกแนบเบาะตลอด ห้ามยกอกขึ้นช่วยดึง ดึงศอกไปหาสะโพก บีบหลังค้างครึ่งวิ ลงให้สุดให้หลังยืด (น้ำหนักเริ่มเป็นค่าประมาณ ลองหาในสัปดาห์แรก)"
+    },
+    {
+     "id": "ua-5",
+     "name": "Pec Deck",
+     "repdbId": "pec-deck",
+     "repdbImageId": null,
+     "alternatives": [
+      "machine-chest-fly",
+      "cable-fly",
+      "incline-dumbbell-fly"
+     ],
+     "primary": [
+      "chest"
+     ],
+     "warmup": "1 × 10–12 light",
+     "sets": 2,
+     "repMin": 10,
+     "repMax": 15,
+     "rir": "0–1",
+     "restSec": 75,
+     "startKg": 22.5,
+     "stepKg": 2.5,
+     "noteTh": "ปรับเบาะให้ด้ามอยู่ระดับอก ไหล่ไม่ห่อไปข้างหน้า ประกบแล้วบีบค้าง 1 วิ เปิดกลับช้าๆ ให้อกยืดสุด"
+    },
+    {
+     "id": "ua-6",
+     "name": "Machine Lateral Raise",
+     "repdbId": "plate-loaded-lateral-raise",
+     "repdbImageId": "plate-loaded-lateral-raise",
+     "alternatives": [
+      "cable-lateral-raise",
+      "lateral-raise",
+      "seated-dumbbell-lateral-raise"
+     ],
+     "primary": [
+      "side delts"
+     ],
+     "warmup": "1 × 10–12 light",
+     "sets": 2,
+     "repMin": 12,
+     "repMax": 20,
+     "rir": "0–1",
+     "restSec": 75,
+     "startKg": 7.5,
+     "stepKg": 2.5,
+     "noteTh": "ไหล่ตรงกับแกนหมุนเครื่อง ยกด้วยศอกไม่ใช่มือ ห้ามยักไหล่ ขึ้นแค่ระดับไหล่ ลงช้าคุมน้ำหนัก"
+    },
+    {
+     "id": "ua-7",
+     "name": "Reverse Pec Deck",
+     "repdbId": null,
+     "repdbImageId": "rear-delt-fly",
+     "alternatives": [
+      "face-pull",
+      "rear-delt-fly",
+      "dumbbell-reverse-fly"
+     ],
+     "primary": [
+      "rear delts"
+     ],
+     "warmup": "1 × 10–12 light",
+     "sets": 2,
+     "repMin": 12,
+     "repMax": 20,
+     "rir": "0–1",
+     "restSec": 75,
+     "startKg": 15,
+     "stepKg": 2.5,
+     "noteTh": "หันหน้าเข้าเครื่อง อกติดเบาะ แขนเกือบตรง กางออกด้วยไหล่หลัง ไม่ต้องบีบสะบักเยอะ ห้ามเหวี่ยง"
+    },
+    {
+     "id": "ua-8",
+     "name": "Seated Triceps Extension Machine (Life Fitness)",
+     "repdbId": "machine-triceps-extension",
+     "repdbImageId": null,
+     "alternatives": [
+      "overhead-tricep-extension",
+      "tricep-pushdown",
+      "single-arm-tricep-pushdown"
+     ],
+     "primary": [
+      "triceps"
+     ],
+     "warmup": "1 × 10–12 light",
+     "sets": 2,
+     "repMin": 10,
+     "repMax": 15,
+     "rir": "0–1",
+     "restSec": 60,
+     "startKg": 15,
+     "stepKg": 2.5,
+     "supersetWith": "ua-9",
+     "noteTh": "นั่งเข้าเครื่อง วางต้นแขนพาดเบาะรองแบบ preacher เหยียดแขนลงจนสุดบีบไตรเซ็ปค้าง ปล่อยขึ้นช้าๆ ไม่ยกไหล่ช่วย (น้ำหนักเริ่มเป็นค่าประมาณ) · ซูเปอร์เซ็ตสลับกับ ua-9"
+    },
+    {
+     "id": "ua-9",
+     "name": "Machine Preacher Curl (Life Fitness)",
+     "repdbId": "machine-preacher-curl",
+     "repdbImageId": null,
+     "alternatives": [
+      "preacher-curl",
+      "cable-curl",
+      "incline-db-curl"
+     ],
+     "primary": [
+      "biceps"
+     ],
+     "warmup": "1 × 10–12 light",
+     "sets": 2,
+     "repMin": 10,
+     "repMax": 15,
+     "rir": "0–1",
+     "restSec": 60,
+     "startKg": 7.5,
+     "stepKg": 2.5,
+     "supersetWith": "ua-8",
+     "noteTh": "นั่งเข้าเครื่อง preacher ต้นแขนแนบเบาะรองตลอด ห้ามยกศอก ม้วนขึ้นสุดบีบค้าง ลงช้าจนเกือบเหยียดสุด · ซูเปอร์เซ็ตสลับกับ ua-8"
+    }
+   ]
+  },
+  {
+   "id": "LA",
+   "name": "Lower A",
+   "nameTh": "ท่อนล่าง A (เน้นต้นขาหน้า + hinge)",
+   "focus": "Quads + hip hinge (RDL)",
+   "exercises": [
+    {
+     "id": "la-1",
+     "name": "Hack Squat",
+     "repdbId": "hack-squat",
+     "repdbImageId": null,
+     "alternatives": [
+      "leg-press",
+      "smith-machine-squat",
+      "squat"
+     ],
+     "primary": [
+      "quads",
+      "glutes"
+     ],
+     "warmup": "2–3 ramp sets: empty×10, ~60%×8, ~80%×4",
+     "sets": 2,
+     "repMin": 6,
+     "repMax": 10,
+     "rir": "0–1",
+     "restSec": 150,
+     "startKg": 35,
+     "stepKg": 5,
+     "noteTh": "เท้ากลางแท่น กว้างเท่าไหล่ ลงลึกจนต้นขาต่ำกว่าขนาน หลังติดเบาะตลอด ลงช้า 2 วิ ไม่ล็อกเข่าด้านบน"
+    },
+    {
+     "id": "la-2",
+     "name": "Dumbbell Romanian Deadlift",
+     "repdbId": "dumbbell-romanian-deadlift",
+     "repdbImageId": null,
+     "alternatives": [
+      "smith-machine-rdl",
+      "machine-back-extension",
+      "leg-curl"
+     ],
+     "primary": [
+      "hamstrings",
+      "glutes"
+     ],
+     "perSide": true,
+     "warmup": "2 ramp sets: light×10, ~70%×6",
+     "sets": 2,
+     "repMin": 8,
+     "repMax": 12,
+     "rir": "1",
+     "restSec": 150,
+     "startKg": 15,
+     "stepKg": 2.5,
+     "noteTh": "ท่า hinge หลัก ถือดัมเบลข้างละลูกหน้าขา งอเข่านิดๆ ดันก้นไปข้างหลัง ดัมเบลชิดขาตลอด หลังตรง ลงจนแฮมตึง (ประมาณใต้เข่า) ห้ามหลังงอ ไม่ต้องทำจนหมดแรงจริง หยุดเมื่อหลังเริ่มงอ (น้ำหนักต่อข้าง)"
+    },
+    {
+     "id": "la-3",
+     "name": "Seated Leg Curl",
+     "repdbId": "seated-leg-curl",
+     "repdbImageId": null,
+     "alternatives": [
+      "leg-curl",
+      "single-leg-lying-leg-curl"
+     ],
+     "primary": [
+      "hamstrings"
+     ],
+     "warmup": "1 × 10–12 light",
+     "sets": 2,
+     "repMin": 10,
+     "repMax": 15,
+     "rir": "0–1",
+     "restSec": 90,
+     "startKg": 32.5,
+     "stepKg": 2.5,
+     "noteTh": "ล็อกแผ่นทับต้นขาให้แน่น เอนตัวไปข้างหน้านิดๆ ให้แฮมยืดมากขึ้น งอให้สุดแล้วปล่อยช้าๆ"
+    },
+    {
+     "id": "la-4",
+     "name": "Leg Extension",
+     "repdbId": "leg-extension",
+     "repdbImageId": null,
+     "alternatives": [
+      "single-leg-extension",
+      "close-stance-leg-press"
+     ],
+     "primary": [
+      "quads"
+     ],
+     "warmup": "1 × 10–12 light",
+     "sets": 2,
+     "repMin": 10,
+     "repMax": 15,
+     "rir": "0–1",
+     "restSec": 75,
+     "startKg": 27.5,
+     "stepKg": 2.5,
+     "noteTh": "แกนหมุนตรงกับเข่า จับด้ามข้างเบาะ ก้นไม่ลอย เหยียดสุดบีบค้าง 1 วิ ลงช้า"
+    },
+    {
+     "id": "la-5",
+     "name": "Standing Calf Raise",
+     "repdbId": "standing-calf-raise",
+     "repdbImageId": null,
+     "alternatives": [
+      "machine-calf-raise",
+      "smith-machine-calf-raise",
+      "hack-squat-calf-raise"
+     ],
+     "primary": [
+      "calves"
+     ],
+     "warmup": "1 × 10–12 light",
+     "sets": 2,
+     "repMin": 10,
+     "repMax": 15,
+     "rir": "0–1",
+     "restSec": 75,
+     "startKg": 22.5,
+     "stepKg": 2.5,
+     "noteTh": "ลงให้ส้นต่ำสุดค้าง 1–2 วิ ขึ้นจนเขย่งสุด ห้ามเด้ง เข่าเหยียดตรง"
+    },
+    {
+     "id": "la-6",
+     "name": "Machine Crunch",
+     "repdbId": "machine-seated-crunch",
+     "repdbImageId": null,
+     "alternatives": [
+      "cable-crunch",
+      "hanging-knee-raise",
+      "decline-crunch"
+     ],
+     "primary": [
+      "abs"
+     ],
+     "warmup": "none",
+     "sets": 2,
+     "repMin": 10,
+     "repMax": 15,
+     "rir": "0–1",
+     "restSec": 60,
+     "startKg": 17.5,
+     "stepKg": 2.5,
+     "noteTh": "ม้วนตัวด้วยท้อง ไม่ใช่ดึงด้วยแขน หายใจออกตอนม้วน ลงช้า"
+    },
+    {
+     "id": "la-7",
+     "name": "Seated Dumbbell Lateral Raise",
+     "repdbId": "seated-dumbbell-lateral-raise",
+     "repdbImageId": null,
+     "alternatives": [
+      "lateral-raise",
+      "cable-lateral-raise",
+      "plate-loaded-lateral-raise"
+     ],
+     "primary": [
+      "side delts"
+     ],
+     "perSide": true,
+     "warmup": "1 × 10–12 light",
+     "sets": 2,
+     "repMin": 12,
+     "repMax": 20,
+     "rir": "0–1",
+     "restSec": 60,
+     "startKg": 4,
+     "stepKg": 1,
+     "noteTh": "นั่งเพื่อตัดการเหวี่ยง ยกโดยให้ศอกนำ ถึงระดับไหล่ ลงช้า 2–3 วิ (น้ำหนักต่อข้าง)"
+    },
+    {
+     "id": "la-8",
+     "name": "Rope Triceps Pushdown",
+     "repdbId": "tricep-pushdown",
+     "repdbImageId": null,
+     "alternatives": [
+      "v-bar-tricep-pushdown",
+      "single-arm-tricep-pushdown",
+      "machine-triceps-extension"
+     ],
+     "primary": [
+      "triceps"
+     ],
+     "warmup": "1 × 10–12 light",
+     "sets": 2,
+     "repMin": 10,
+     "repMax": 15,
+     "rir": "0–1",
+     "restSec": 60,
+     "startKg": 12.5,
+     "stepKg": 2.5,
+     "supersetWith": "la-9",
+     "noteTh": "ศอกแนบลำตัวไม่ขยับ กดลงจนแขนเหยียดสุด แยกเชือกออกตอนล่าง · ซูเปอร์เซ็ตสลับกับ la-9"
+    },
+    {
+     "id": "la-9",
+     "name": "Incline Dumbbell Curl",
+     "repdbId": "incline-db-curl",
+     "repdbImageId": null,
+     "alternatives": [
+      "cable-curl",
+      "incline-hammer-curl",
+      "bicep-curl"
+     ],
+     "primary": [
+      "biceps"
+     ],
+     "perSide": true,
+     "warmup": "none (arms warm from la-8)",
+     "sets": 2,
+     "repMin": 10,
+     "repMax": 15,
+     "rir": "0–1",
+     "restSec": 60,
+     "startKg": 6,
+     "stepKg": 1,
+     "supersetWith": "la-8",
+     "noteTh": "ม้านั่งเอียง ~45–60° แขนห้อยไปหลังลำตัวให้ไบเซ็ปยืด ม้วนขึ้นโดยศอกไม่เลื่อนไปข้างหน้า (น้ำหนักต่อข้าง) · ซูเปอร์เซ็ตสลับกับ la-8"
+    }
+   ]
+  },
+  {
+   "id": "UB",
+   "name": "Upper B",
+   "nameTh": "ท่อนบน B (เน้นอกกลาง/ยืดอก + ดึงแนวนอน)",
+   "focus": "Chest priority (flat/stretch) + horizontal pull",
+   "exercises": [
+    {
+     "id": "ub-1",
+     "name": "Plate-Loaded Flat Chest Press",
+     "repdbId": "chest-press-machine",
+     "repdbImageId": "chest-press-machine",
+     "alternatives": [
+      "db-bench-press",
+      "smith-machine-bench-press",
+      "bench-press"
+     ],
+     "primary": [
+      "chest"
+     ],
+     "warmup": "2–3 ramp sets: ~50%×10, ~70%×6, ~85%×3",
+     "sets": 2,
+     "repMin": 6,
+     "repMax": 10,
+     "rir": "0–1",
+     "restSec": 150,
+     "startKg": 32.5,
+     "stepKg": 2.5,
+     "noteTh": "สะบักบีบลงล่าง อกเปิด ลงให้ลึกจนอกยืด ดันขึ้นไม่ล็อกศอก เท้าวางแน่น ก้นไม่ลอยจากเบาะ"
+    },
+    {
+     "id": "ub-2",
+     "name": "Assisted Pull-Up",
+     "repdbId": "assisted-pull-ups",
+     "repdbImageId": null,
+     "alternatives": [
+      "lat-pulldown",
+      "v-bar-lat-pulldown",
+      "close-grip-lat-pulldown"
+     ],
+     "primary": [
+      "lats"
+     ],
+     "warmup": "1 × 6–8 with extra assistance",
+     "sets": 2,
+     "repMin": 6,
+     "repMax": 10,
+     "rir": "0–1",
+     "restSec": 120,
+     "startKg": -35,
+     "stepKg": 2.5,
+     "noteTh": "จับคว่ำหรือด้าม neutral ดึงจนคางพ้นบาร์ ลงช้าจนแขนเกือบตรง ค่าติดลบ = น้ำหนักช่วย พอครบ 10 ครั้งทั้ง 2 เซ็ต ให้ลดน้ำหนักช่วยลง 2.5"
+    },
+    {
+     "id": "ub-3",
+     "name": "Smith Machine Incline Press (30°)",
+     "repdbId": "smith-machine-incline-bench-press",
+     "repdbImageId": null,
+     "alternatives": [
+      "incline-db-press",
+      "cable-chest-press",
+      "smith-machine-bench-press"
+     ],
+     "primary": [
+      "upper chest"
+     ],
+     "warmup": "1 × 6–8 @ ~60%",
+     "sets": 2,
+     "repMin": 8,
+     "repMax": 12,
+     "rir": "0–1",
+     "restSec": 120,
+     "startKg": 30,
+     "stepKg": 2.5,
+     "noteTh": "ตั้ง Smith Machine ให้ม้านั่งเอียง ~30° ไม่ต้องชันกว่านี้ สะบักบีบลงล่าง ลงลึกจนอกยืด ดันขึ้นไม่ล็อกศอก (น้ำหนักเริ่มเป็นค่าประมาณ นับเฉพาะแผ่นน้ำหนักที่ใส่ ไม่รวมน้ำหนักบาร์ ถ้าไม่แน่ใจน้ำหนักบาร์ของเครื่อง)"
+    },
+    {
+     "id": "ub-4",
+     "name": "Seated Cable Row",
+     "repdbId": "seated-cable-row",
+     "repdbImageId": null,
+     "alternatives": [
+      "chest-supported-db-row",
+      "wide-grip-seated-cable-row",
+      "single-arm-db-row"
+     ],
+     "primary": [
+      "mid back",
+      "lats"
+     ],
+     "warmup": "1 × 8–10 light",
+     "sets": 2,
+     "repMin": 8,
+     "repMax": 12,
+     "rir": "0–1",
+     "restSec": 120,
+     "startKg": 32.5,
+     "stepKg": 2.5,
+     "noteTh": "ด้าม V อกตั้ง ไม่โยกตัว ดึงเข้าหาท้อง ศอกแนบลำตัว ปล่อยไปข้างหน้าให้หลังยืดแต่หลังล่างไม่งอ"
+    },
+    {
+     "id": "ub-5",
+     "name": "Pec Deck",
+     "repdbId": "pec-deck",
+     "repdbImageId": null,
+     "alternatives": [
+      "machine-chest-fly",
+      "cable-fly",
+      "db-fly"
+     ],
+     "primary": [
+      "chest"
+     ],
+     "warmup": "1 × 10–12 light",
+     "sets": 2,
+     "repMin": 10,
+     "repMax": 15,
+     "rir": "0–1",
+     "restSec": 75,
+     "startKg": 22.5,
+     "stepKg": 2.5,
+     "noteTh": "ปรับเบาะให้ด้ามอยู่ระดับอก ไหล่ไม่ห่อไปข้างหน้า ประกบแล้วบีบค้าง 1 วิ เปิดกลับช้าๆ ให้อกยืดสุด"
+    },
+    {
+     "id": "ub-6",
+     "name": "Single-Arm Cable Lateral Raise",
+     "repdbId": "cable-lateral-raise",
+     "repdbImageId": null,
+     "alternatives": [
+      "plate-loaded-lateral-raise",
+      "lateral-raise",
+      "side-lying-lateral-raise"
+     ],
+     "primary": [
+      "side delts"
+     ],
+     "warmup": "1 × 10–12 light",
+     "sets": 2,
+     "repMin": 12,
+     "repMax": 20,
+     "rir": "0–1",
+     "restSec": 60,
+     "startKg": 2.5,
+     "stepKg": 2.5,
+     "noteTh": "รอกต่ำ ทำทีละข้าง เอนตัวออกจากเสาเล็กน้อย ยกไปด้านข้างถึงระดับไหล่ ห้ามยักไหล่ ลงช้า (น้ำหนักค่าประมาณ)"
+    },
+    {
+     "id": "ub-7",
+     "name": "Reverse Pec Deck",
+     "repdbId": null,
+     "repdbImageId": "rear-delt-fly",
+     "alternatives": [
+      "rear-delt-fly",
+      "dumbbell-reverse-fly",
+      "cable-lateral-raise"
+     ],
+     "primary": [
+      "rear delts"
+     ],
+     "warmup": "1 × 10–12 light",
+     "sets": 2,
+     "repMin": 12,
+     "repMax": 20,
+     "rir": "0–1",
+     "restSec": 75,
+     "startKg": 15,
+     "stepKg": 2.5,
+     "noteTh": "หันหน้าเข้าเครื่อง อกติดเบาะ แขนเกือบตรง กางออกด้วยไหล่หลัง ไม่ต้องบีบสะบักเยอะ ห้ามเหวี่ยง"
+    },
+    {
+     "id": "ub-8",
+     "name": "Overhead Cable Triceps Extension (rope, face away from pulley)",
+     "repdbId": null,
+     "repdbImageId": "overhead-tricep-extension",
+     "alternatives": [
+      "machine-triceps-extension",
+      "tricep-pushdown",
+      "single-arm-tricep-pushdown"
+     ],
+     "primary": [
+      "triceps"
+     ],
+     "warmup": "1 × 10–12 light",
+     "sets": 2,
+     "repMin": 10,
+     "repMax": 15,
+     "rir": "0–1",
+     "restSec": 60,
+     "startKg": 10,
+     "stepKg": 2.5,
+     "supersetWith": "ub-9",
+     "noteTh": "หันหลังให้เสา เชือกอยู่หลังหัว ศอกชี้ไปข้างหน้าไม่กางออก ลงให้สุดให้ไตรเซ็ปยืด แล้วเหยียดจนสุด · ซูเปอร์เซ็ตสลับกับ ub-9"
+    },
+    {
+     "id": "ub-9",
+     "name": "Dumbbell Hammer Curl",
+     "repdbId": "hammer-curl",
+     "repdbImageId": null,
+     "alternatives": [
+      "cable-hammer-curl",
+      "incline-hammer-curl",
+      "cross-body-hammer-curl"
+     ],
+     "primary": [
+      "biceps"
+     ],
+     "perSide": true,
+     "warmup": "1 × 10–12 light",
+     "sets": 2,
+     "repMin": 10,
+     "repMax": 15,
+     "rir": "0–1",
+     "restSec": 60,
+     "startKg": 7.5,
+     "stepKg": 1,
+     "supersetWith": "ub-8",
+     "noteTh": "ถือดัมเบลแบบตะแคง (neutral grip) ม้วนขึ้นโดยศอกไม่แกว่ง บีบค้างด้านบน ลงช้าจนเกือบเหยียดสุด (น้ำหนักต่อข้าง) · ซูเปอร์เซ็ตสลับกับ ub-8"
+    }
+   ]
+  },
+  {
+   "id": "LB",
+   "name": "Lower B",
+   "nameTh": "ท่อนล่าง B (เน้นแฮม/ก้น + ไหล่ข้าง + หลังเสริม)",
+   "focus": "Hamstrings/glutes (hinge) + quads + side delts + back accessory",
+   "exercises": [
+    {
+     "id": "lb-1",
+     "name": "45° Leg Press",
+     "repdbId": "leg-press",
+     "repdbImageId": null,
+     "alternatives": [
+      "hack-squat",
+      "horizontal-leg-press",
+      "smith-machine-squat"
+     ],
+     "primary": [
+      "quads",
+      "glutes"
+     ],
+     "warmup": "2–3 ramp sets: sled×12, ~60%×8, ~80%×4",
+     "sets": 2,
+     "repMin": 8,
+     "repMax": 12,
+     "rir": "0–1",
+     "restSec": 150,
+     "startKg": 55,
+     "stepKg": 5,
+     "noteTh": "เท้ากลางแท่น กว้างเท่าไหล่ ลงลึกแต่ก้นกับหลังล่างไม่ลอยจากเบาะ ไม่ล็อกเข่าด้านบน"
+    },
+    {
+     "id": "lb-2",
+     "name": "Machine Back Extension",
+     "repdbId": "machine-back-extension",
+     "repdbImageId": null,
+     "alternatives": [
+      "dumbbell-romanian-deadlift",
+      "smith-machine-rdl",
+      "plate-loaded-glute-drive"
+     ],
+     "primary": [
+      "hamstrings",
+      "glutes"
+     ],
+     "warmup": "1 × 10 light",
+     "sets": 2,
+     "repMin": 10,
+     "repMax": 15,
+     "rir": "0–1",
+     "restSec": 90,
+     "startKg": 30,
+     "stepKg": 2.5,
+     "noteTh": "นั่ง/นอนเข้าเครื่อง back extension ขอบรองอยู่ใต้กระดูกเชิงกราน งอที่สะโพกไม่ใช่งอหลัง เน้นก้นกับแฮม ปรับน้ำหนักที่เครื่อง (น้ำหนักเริ่มเป็นค่าประมาณ)"
+    },
+    {
+     "id": "lb-3",
+     "name": "Lying Leg Curl",
+     "repdbId": "leg-curl",
+     "repdbImageId": null,
+     "alternatives": [
+      "single-leg-lying-leg-curl",
+      "seated-leg-curl"
+     ],
+     "primary": [
+      "hamstrings"
+     ],
+     "warmup": "1 × 10–12 light",
+     "sets": 2,
+     "repMin": 10,
+     "repMax": 15,
+     "rir": "0–1",
+     "restSec": 90,
+     "startKg": 17.5,
+     "stepKg": 2.5,
+     "noteTh": "สะโพกกดติดเบาะ ห้ามยกก้น งอให้สุด ลงช้าจนเกือบเหยียดสุด"
+    },
+    {
+     "id": "lb-4",
+     "name": "Leg Extension",
+     "repdbId": "leg-extension",
+     "repdbImageId": null,
+     "alternatives": [
+      "single-leg-extension",
+      "close-stance-leg-press"
+     ],
+     "primary": [
+      "quads"
+     ],
+     "warmup": "1 × 10–12 light",
+     "sets": 2,
+     "repMin": 10,
+     "repMax": 15,
+     "rir": "0–1",
+     "restSec": 75,
+     "startKg": 27.5,
+     "stepKg": 2.5,
+     "noteTh": "ก้นไม่ลอย เหยียดสุดบีบค้าง 1 วิ วันนี้ชะลอช่วงลง 3 วิ"
+    },
+    {
+     "id": "lb-5",
+     "name": "Seated Calf Raise",
+     "repdbId": "seated-calf-raise",
+     "repdbImageId": null,
+     "alternatives": [
+      "standing-calf-raise",
+      "smith-machine-calf-raise",
+      "dumbbell-calf-raise"
+     ],
+     "primary": [
+      "calves"
+     ],
+     "warmup": "1 × 10–12 light",
+     "sets": 2,
+     "repMin": 12,
+     "repMax": 20,
+     "rir": "0–1",
+     "restSec": 75,
+     "startKg": 22.5,
+     "stepKg": 2.5,
+     "noteTh": "ลงให้สุดค้าง 1–2 วิ ขึ้นสุด ห้ามเด้ง ท่านี้เน้นน่องชั้นใน (soleus) เครื่องนั่งกดขึ้นตรงหรือเครื่องแนวนอนก็ใช้แทนกันได้"
+    },
+    {
+     "id": "lb-6",
+     "name": "Captain's Chair Knee Raise",
+     "repdbId": "captains-chair-knee-raise",
+     "repdbImageId": null,
+     "alternatives": [
+      "hanging-knee-raise",
+      "machine-seated-crunch",
+      "cable-crunch"
+     ],
+     "primary": [
+      "abs"
+     ],
+     "warmup": "none",
+     "sets": 2,
+     "repMin": 10,
+     "repMax": 20,
+     "rir": "0–1",
+     "restSec": 60,
+     "startKg": null,
+     "stepKg": null,
+     "noteTh": "หลังติดพนัก ยกเข่าแล้วม้วนก้นกบขึ้นตาม ห้ามแกว่งขา ถ้าได้ 20 ครั้งสบายๆ เปลี่ยนเป็นยกขาตรง"
+    },
+    {
+     "id": "lb-7",
+     "name": "Lean-Away Cable Lateral Raise",
+     "repdbId": "cable-lateral-raise",
+     "repdbImageId": "cable-lateral-raise",
+     "alternatives": [
+      "plate-loaded-lateral-raise",
+      "seated-dumbbell-lateral-raise",
+      "single-arm-plate-loaded-lateral-raise"
+     ],
+     "primary": [
+      "side delts"
+     ],
+     "warmup": "1 × 10–12 light",
+     "sets": 2,
+     "repMin": 12,
+     "repMax": 20,
+     "rir": "0–1",
+     "restSec": 60,
+     "startKg": 5,
+     "stepKg": 2.5,
+     "perSide": true,
+     "noteTh": "ทำทีละข้าง รอกต่ำสุด มืออีกข้างจับเสาแล้วเอนตัวออก เริ่มจากแขนไขว้หน้าลำตัวเพื่อยืดไหล่ ยกด้วยศอกขึ้นแค่ระดับไหล่ ลงช้า (น้ำหนักเริ่มเป็นค่าประมาณ)"
+    },
+    {
+     "id": "lb-8",
+     "name": "Single-Arm Cable Pulldown",
+     "repdbId": "one-arm-lat-pulldown",
+     "repdbImageId": null,
+     "alternatives": [
+      "single-arm-db-row",
+      "seated-cable-row",
+      "close-grip-lat-pulldown"
+     ],
+     "primary": [
+      "lats"
+     ],
+     "warmup": "1 × 10–12 light",
+     "sets": 2,
+     "repMin": 10,
+     "repMax": 15,
+     "rir": "0–1",
+     "restSec": 75,
+     "startKg": 15,
+     "stepKg": 2.5,
+     "noteTh": "ทำทีละข้าง มือจับด้ามเดี่ยว ดึงศอกลงข้างลำตัวจนมือถึงระดับสะโพก บิดลำตัวเล็กน้อยได้แต่ไม่แกว่ง เน้นแลตด้านที่ดึง (น้ำหนักเริ่มเป็นค่าประมาณ)"
+    }
+   ]
+  }
+ ]
+}
