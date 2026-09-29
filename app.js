@@ -44,6 +44,7 @@ function db() {
     DB = new Map((j.exercises || j).map((x) => [x.id, x]));
     // hydrate only the picture boxes in place — no re-render, no layout shift
     document.querySelectorAll('[data-pics]').forEach((el) => (el.innerHTML = picImgs(el.dataset.pics)));
+    document.querySelectorAll('[data-thumb]').forEach((el) => (el.innerHTML = thumbImg(el.dataset.thumb)));
     if (route() === 'workout') preloadNext();
     setTimeout(warmImages, 3000);
   }).catch(() => { dbReq = null; });
@@ -56,6 +57,7 @@ const picImgs = (id) => (DB?.get(id)?.images?.flat?.main ? ['start'] : ['start',
   const u = img(id, w);
   return u ? `<img crossorigin="anonymous" alt="" decoding="async" src="${u}">` : '<span class="ph"></span>';
 }).join('');
+const thumbImg = (id) => { const u = img(id, 'start'); return u ? `<img crossorigin="anonymous" alt="" decoding="async" src="${u}">` : '<span class="ph"></span>'; };
 const pics = (id, cls = '') => (id ? `<div class="pics ${cls}" data-pics="${esc(id)}">${picImgs(id)}</div>` : '');
 function preloadImgs(id) {
   for (const w of ['start', 'peak']) { const u = img(id, w); if (u) { const im = new Image(); im.crossOrigin = 'anonymous'; im.src = u; } }
@@ -167,7 +169,8 @@ function today() {
   <ol class="exlist">${d.exercises.map((x) => {
     const ls = L.lastSetsFor(S.sessions, x.name);
     const up = L.progression(x, ls);
-    return `<li><div><b>${esc(x.name)}</b>
+    const gid = x.repdbId || x.repdbImageId;
+    return `<li role="button" tabindex="0" class="tap" data-a="ov-guide" data-slot="${esc(x.id)}" aria-label="${esc(x.name)} guide">${gid ? `<i class="thumb" data-thumb="${esc(gid)}">${thumbImg(gid)}</i>` : '<i class="thumb"></i>'}<div><b>${esc(x.name)}</b>
       <span class="muted">${x.sets} × ${x.repMin}–${x.repMax}${x.perSide ? ' · per side' : ''}${x.supersetWith ? ` <span class="tag sspill">SS ⇄ ${esc(L.shortName(d.exercises.find((q) => q.id === x.supersetWith)?.name))}</span>` : ''}</span></div>
       <div class="kgcol">${ls.length ? `last ${esc(L.fmtSet(ls[0]))}` : `start ${esc(L.fmtKg(x.startKg))}`}${up != null ? `<span class="up">↑ ${esc(L.fmtKg(up))}</span>` : ''}</div></li>`;
   }).join('')}</ol>
@@ -569,6 +572,10 @@ document.addEventListener('click', (ev) => {
     'del-set': () => ask('Delete this set?', 'Delete', () => {
       const e = ip.entries[ip.cur]; const was = e.done; e.sets.splice(+t.dataset.k, 1); e.done = false; save(); patchPlayer(was);
     }),
+    'ov-guide': () => {
+      const x = dayOf(plan(), parts()[1] || L.nextDayId(plan(), S.rotation[plan().id] || 0)).exercises.find((q) => q.id === t.dataset.slot);
+      if (x) { guideSheet(x.repdbId || x.repdbImageId, x); db(); }
+    },
     guide: () => { const x = slot(ip.cur); guideSheet(x.guideId, x); },
     swap: swapSheet,
     'swap-to': () => {
