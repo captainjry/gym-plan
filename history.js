@@ -101,7 +101,7 @@ function main(ctx) {
     <h3 class="pad">Exercises</h3>
     <input id="h-q" class="hsearch" type="search" placeholder="Search exercises" value="${e(st.q)}" autocomplete="off">
     <ul class="hlist" id="h-exlist">${recs.map((r) => `<li data-n="${e(r.name.toLowerCase())}"${q && !r.name.toLowerCase().includes(q) ? ' hidden' : ''}><button class="hrow" data-a="h-ex" data-n="${e(encodeURIComponent(r.name))}"><span class="hmain"><b>${e(r.name)}</b></span><span class="muted hside">${fmtRec(r.kind, r.heaviest, L)}</span></button></li>`).join('')}</ul>
-    <details class="card hrec"><summary>Records</summary><ul class="hlist">${recs.map((r) => `<li class="hrecrow"><b>${e(r.name)}</b><span>${r.kind === 'w' ? 'Heaviest' : 'Best'} ${fmtRec(r.kind, r.heaviest, L)}</span>${r.e1rm ? `<span>e1RM ${L.e1rm(r.e1rm.kg, r.e1rm.reps)} kg</span>` : ''}<span class="muted">${short(r.date)}</span></li>`).join('')}</ul></details>
+    <details class="card hrec"><summary>Records</summary><ul class="hlist">${recs.map((r) => `<li class="hrecrow"><b>${e(r.name)}</b><span>${r.kind === 'w' ? 'Heaviest' : 'Best'} ${fmtRec(r.kind, r.heaviest, L)}</span>${r.e1rm ? `<span>e1RM ${Math.round(L.e1rm(r.e1rm.kg, r.e1rm.reps) * 10) / 10} kg</span>` : ''}<span class="muted">${short(r.date)}</span></li>`).join('')}</ul></details>
     ${bw}`;
 }
 
@@ -134,7 +134,7 @@ function exView(ctx, name) {
   const big = kind === 'a' ? -best.kg : kind === 'w' ? best.kg : best.reps;
   return `<div class="pad">${back}</div><h1 class="pad">${e(shown)}</h1>
     <div class="stats"><div><b>${big}</b><span>${kind === 'a' ? `best assist kg × ${best.reps}` : kind === 'w' ? `best set kg × ${best.reps}` : 'best reps'}</span></div>
-    ${est != null ? `<div><b>${est}</b><span>est. 1RM kg</span></div>` : `<div><b>${h.length}</b><span>sessions</span></div>`}</div>
+    ${est != null ? `<div><b>${Math.round(est * 10) / 10}</b><span>est. 1RM kg</span></div>` : `<div><b>${h.length}</b><span>sessions</span></div>`}</div>
     <section class="card"><p class="muted" style="margin-top:0">${lab}</p>${chart(pts, { inv: kind === 'a', xt, unit: lab })}</section>
     <section class="card"><table class="htable"><tbody>${rows}</tbody></table></section>`;
 }

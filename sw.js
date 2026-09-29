@@ -1,5 +1,5 @@
 // Bump APP_VERSION on every deploy → new shell cache → page shows "Update available".
-const APP_VERSION = '2';
+const APP_VERSION = '3';
 const SHELL = `gp-shell-${APP_VERSION}`;
 const RUNTIME = 'gp-runtime'; // RepDB JSON/images + fonts: kept across app versions (offline pictures)
 const FILES = ['./', 'index.html', 'style.css', 'app.js', 'logic.js', 'manifest.webmanifest',
