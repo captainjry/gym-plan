@@ -36,15 +36,25 @@ export function progression(ex, lastSets) {
   return r2(kg + ex.stepKg);
 }
 
-// Prefill for the next set of this exercise
+// Prefill for the next set of this exercise. ex.nextKg (set from Today) beats last time and the ↑ hint for set 1.
 export function prefill(ex, lastSets, curSets) {
   const i = curSets.length;
   const up = progression(ex, lastSets);
   const prev = curSets[i - 1];
   const last = lastSets[i] || lastSets[lastSets.length - 1];
-  const kg = prev ? prev.kg : up ?? last?.kg ?? ex.startKg ?? null;
+  const kg = prev ? prev.kg : ex.nextKg ?? up ?? last?.kg ?? ex.startKg ?? null;
   const reps = up != null ? ex.repMin : last?.reps ?? prev?.reps ?? ex.repMin;
   return { kg, reps };
+}
+
+// What the player would prefill for set 1 ignoring any override (seed for the "Next session kg" input)
+export const defaultNextKg = (ex, lastSets) => prefill({ ...ex, nextKg: null }, lastSets, []).kg;
+// Carry nextKg notes (by exercise id) from an old plan onto a replacement plan (mutates and returns newPlan)
+export function carryNextKg(oldPlan, newPlan) {
+  const m = new Map();
+  for (const d of oldPlan?.days || []) for (const x of d.exercises) if (x.nextKg != null) m.set(x.id, x.nextKg);
+  for (const d of newPlan.days) for (const x of d.exercises) if (m.has(x.id)) x.nextKg = m.get(x.id);
+  return newPlan;
 }
 
 // A set is a new best if no earlier set of the same exercise had >= kg AND >= reps.

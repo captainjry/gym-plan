@@ -332,3 +332,12 @@ body.has-update #view { padding-top: calc(76px + env(safe-area-inset-top, 0px));
   body[data-r=explore]:not([data-sub]) .xlist { grid-template-columns: repeat(3, 1fr); }
   body[data-r=explore]:not([data-sub]) .cols .xlist { grid-template-columns: 1fr 1fr; }
 }
+
+/* Next-session kg override (Guide sheet opened from Today) */
+.nkrow { background: var(--card2); border: 1px solid var(--line); border-radius: 14px; padding: 10px; margin: 8px 0 12px; clear: both; }
+.nkrow .stepper { margin: 6px 0 0; gap: 6px; align-items: stretch; }
+.nkrow .stepper > button:not(.btn) { width: 44px; min-height: 44px; font-size: 1.4rem; border-radius: 12px; }
+.nkrow .stepper .btn { flex-shrink: 0; width: auto; padding: 0 14px; min-height: 44px; font-size: 1rem; font-weight: 700; border-radius: 12px; }
+.nkrow .stepper input { height: 44px; font-size: 1.3rem; border-radius: 12px; padding: 0 40px 0 6px; }
+.nkrow .linkbtn { min-height: 32px; margin-top: 4px; }
+.kgcol .tag { display: inline-block; margin-left: 4px; }

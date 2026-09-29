@@ -239,7 +239,7 @@ A['p-reset'] = (t, ctx) => {
     try {
       const d = (await ctx.defaultPlans())[id];
       if (!d) return ctx.toast('No default for this plan');
-      S().plans[id] = d;
+      S().plans[id] = ctx.L.carryNextKg(S().plans[id], d);
       S().rotation[id] = ctx.L.clampRotation(S().rotation[id] || 0, d);
       ctx.save(); ctx.toast('Plan reset'); fresh();
     } catch { ctx.toast('Could not load the default plan'); }
@@ -338,7 +338,7 @@ export function onInput(ev, ctx) {
 }
 
 // ----- export -----
-const cleanPlan = (p) => { const c = JSON.parse(JSON.stringify(p)); delete c.id; delete c.source; delete c.modified; return c; };
+const cleanPlan = (p) => { const c = JSON.parse(JSON.stringify(p)); delete c.id; delete c.source; delete c.modified; c.days.forEach((d) => d.exercises.forEach((x) => delete x.nextKg)); return c; };
 export function buildPrompt(planJson) {
   return `You are my strength coach. Below is my current training plan as JSON. Revise it as I ask and return ONLY the revised plan as a single JSON object in exactly the same schema, with no commentary and no markdown.
 

@@ -173,7 +173,7 @@ function today() {
     const gid = x.repdbId || x.repdbImageId;
     return `<li role="button" tabindex="0" class="tap" data-a="ov-guide" data-slot="${esc(x.id)}" aria-label="${esc(x.name)} guide">${gid ? `<i class="thumb" data-thumb="${esc(gid)}">${thumbImg(gid)}</i>` : '<i class="thumb"></i>'}<div><b>${esc(x.name)}</b>
       <span class="muted">${x.sets} × ${x.repMin}–${x.repMax}${x.perSide ? ' · per side' : ''}${x.supersetWith ? ` <span class="tag sspill">SS ⇄ ${esc(L.shortName(d.exercises.find((q) => q.id === x.supersetWith)?.name))}</span>` : ''}</span></div>
-      <div class="kgcol">${ls.length ? `last ${esc(L.fmtSet(ls[0]))}` : `start ${esc(L.fmtKg(x.startKg))}`}${up != null ? `<span class="up">↑ ${esc(L.fmtKg(up))}</span>` : ''}</div></li>`;
+      <div class="kgcol">${x.nextKg != null ? `next ${esc(L.fmtKg(x.nextKg))} <span class="tag">set</span>` : ls.length ? `last ${esc(L.fmtSet(ls[0]))}` : `start ${esc(L.fmtKg(x.startKg))}`}${up != null && x.nextKg == null ? `<span class="up">↑ ${esc(L.fmtKg(up))}</span>` : ''}</div></li>`;
   }).join('')}</ol>
   <p class="credit">Exercise data by <a href="https://repdb.co">RepDB (repdb.co)</a></p>
   <div class="dock"><button class="btn primary big" data-a="start" data-plan="${p.id}" data-day="${d.id}">${ip ? 'Start new workout' : 'Start workout'}</button></div>`;
@@ -192,7 +192,7 @@ function slot(i) { // effective exercise for entry i (swaps keep the slot's targ
   const e = ip.entries[i];
   const x = dayOf(plan(ip.planId), ip.dayId).exercises.find((q) => q.id === e.slotId) || dayOf(plan(ip.planId), ip.dayId).exercises[i];
   if (!e.swapped) return { ...x, imgId: x.repdbImageId || x.repdbId, guideId: x.repdbId || x.repdbImageId, assist: x.startKg < 0 };
-  return { ...x, name: e.name, startKg: null, noteTh: '', warmup: x.warmup, imgId: e.repdbId, guideId: e.repdbId, assist: /assist/.test(e.repdbId), swappedFrom: x.name };
+  return { ...x, name: e.name, startKg: null, nextKg: null, noteTh: '', warmup: x.warmup, imgId: e.repdbId, guideId: e.repdbId, assist: /assist/.test(e.repdbId), swappedFrom: x.name };
 }
 const alignedExs = (ip) => L.alignedExs(dayOf(plan(ip.planId), ip.dayId).exercises, ip.entries);
 function startWorkout(planId, dayId) {
@@ -220,7 +220,7 @@ const setLabel = (e, x) => {
   return k <= x.sets ? `Set ${k} of ${x.sets}${k > 1 ? ' <span class="muted">(optional)</span>' : ''}` : `Extra set ${k}`;
 };
 const loggedHtml = (e) => e.sets.map((s, k) => `<span class="chip">${k + 1}: ${esc(L.fmtSet(s))}<button data-a="del-set" data-k="${k}" aria-label="delete set">×</button></span>`).join('');
-const hintHtml = (up, e) => (up != null && !e.sets.length ? `<p class="up big" id="hint">↑ Try ${esc(L.fmtKg(up))}${up < 0 ? '' : ' kg'}</p>` : '');
+const hintHtml = (up, e, x) => (e.sets.length ? '' : x.nextKg != null ? '<p class="up" id="hint">set from Today</p>' : up != null ? `<p class="up big" id="hint">↑ Try ${esc(L.fmtKg(up))}${up < 0 ? '' : ' kg'}</p>` : '');
 const allDoneHtml = (on) => (on ? '<a class="banner" href="#summary"><b>All exercises done</b><span>Tap to review &amp; save</span></a>' : '');
 function formHtml({ i, e, x, pre }) {
   if (e.done || e.skipped) return `<div class="card center"><p>${e.skipped ? 'Skipped' : 'Exercise done ✓'}</p>
@@ -259,7 +259,7 @@ function workout() {
     ${x.noteTh ? `<p class="th note clamp" data-a="more">${esc(x.noteTh)}</p>` : ''}
     <div class="lastrow"><span class="last">Last time: ${ls.length ? esc(ls.map(L.fmtSet).join(', ')) : '—'}</span>
       <span class="setlabel" id="setlabel" ${e.done || e.skipped ? 'hidden' : ''}>${setLabel(e, x)}</span></div>
-    ${hintHtml(up, e)}
+    ${hintHtml(up, e, x)}
     <div class="logged" id="logged">${loggedHtml(e)}</div>
     <div id="form">${formHtml(st)}</div>
   </section>
@@ -280,7 +280,7 @@ function patchPlayer(formKindChanged) {
   const st = pstate(), { e, x, n, closed, allDone, pre } = st;
   $('#logged').innerHTML = loggedHtml(e);
   $('#hint')?.remove();
-  $('#logged').insertAdjacentHTML('beforebegin', hintHtml(L.progression(x, st.ls), e));
+  $('#logged').insertAdjacentHTML('beforebegin', hintHtml(L.progression(x, st.ls), e, x));
   $('#prog').style.transform = `scaleX(${closed / n})`;
   $('#alldone').innerHTML = allDoneHtml(allDone);
   $('#finish-link').classList.toggle('primary', allDone);
@@ -323,6 +323,8 @@ function doneSet() {
   const ip = S.inProgress, i = ip.cur, e = ip.entries[i], x = slot(i);
   const v = readInputs(x);
   if (v.err) return toast(v.err);
+  const px = planEx(ip, e); // first logged set consumes the Today override
+  if (!e.sets.length && !e.swapped && px?.nextKg != null) delete px.nextKg;
   e.sets.push({ kg: v.kg, reps: v.reps, at: now() });
   if (e.sets.length >= x.sets) e.done = true;
   const d = dayOf(plan(ip.planId), ip.dayId);
@@ -383,11 +385,31 @@ document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'visible') { tick(); if (document.body.classList.contains('workout')) lockOn(); }
 });
 
-function guideSheet(id, x) {
+// "Next session kg" editor, shown only when the Guide is opened from Today
+const shownNk = (x) => shownKg(x.nextKg ?? L.defaultNextKg(x, L.lastSetsFor(S.sessions, x.name)), x.startKg < 0);
+function nkHtml(x) {
+  const label = x.startKg < 0 ? 'kg assist' : x.perSide ? 'kg/side' : 'kg';
+  return `<div class="nkrow"><b>Next session kg</b>
+    <div class="stepper"><button data-a="nk-" aria-label="less weight">−</button>
+      <label><input id="nk" inputmode="decimal" value="${esc(shownNk(x))}" placeholder="${x.startKg == null ? 'BW' : ''}" autocomplete="off"><span>${label}</span></label>
+      <button data-a="nk+" aria-label="more weight">+</button>
+      <button class="btn primary" data-a="nk-save">Save</button></div>
+    ${x.nextKg != null ? '<button class="btn ghost linkbtn" data-a="nk-clear">Clear</button>' : ''}</div>`;
+}
+let nkRef = null; // {planId, dayId, slotId} of the exercise whose Guide was opened from Today
+const nkEx = () => nkRef && dayOf(plan(nkRef.planId), nkRef.dayId)?.exercises.find((q) => q.id === nkRef.slotId);
+function nkSet(v) {
+  const x = nkEx(); if (!x) return;
+  if (v == null) delete x.nextKg; else x.nextKg = v;
+  save();
+  closeSheet(() => { render(); toast(v == null ? 'Override cleared' : `Next session: ${L.fmtKg(v)} kg`); });
+}
+function guideSheet(id, x, fromToday) {
   const r = DB?.get(id);
   const q = encodeURIComponent(`${r?.name_en || x.name} form`).replace(/%20/g, '+');
   sheet(`<button class="btn small close" data-a="close">Close</button>
     <h2>${esc(r?.name_en || x.name)}</h2>
+    ${fromToday ? nkHtml(x) : ''}
     ${pics(id, 'large')}
     ${x.warmup ? `<p class="muted">Warm-up: ${esc(x.warmup)}</p>` : ''}
     ${x.noteTh ? `<p class="th note">${esc(x.noteTh)}</p>` : ''}
@@ -530,7 +552,7 @@ function planUpdHtml() {
 function applyPlanUpdate(id) {
   if (S.inProgress?.planId === id) return; // slot() reads the live plan by position
   const f = planUpd[id];
-  S.plans[id] = { ...f, id, source: DEFAULT_PLANS[id], modified: false };
+  S.plans[id] = L.carryNextKg(S.plans[id], { ...f, id, source: DEFAULT_PLANS[id], modified: false });
   S.rotation[id] = L.clampRotation(S.rotation[id] || 0, S.plans[id]);
   delete planUpd[id];
   if (save()) toast('Plan updated');
@@ -574,9 +596,17 @@ document.addEventListener('click', (ev) => {
       const e = ip.entries[ip.cur]; const was = e.done; e.sets.splice(+t.dataset.k, 1); e.done = false; save(); patchPlayer(was);
     }),
     'ov-guide': () => {
-      const x = dayOf(plan(), parts()[1] || L.nextDayId(plan(), S.rotation[plan().id] || 0)).exercises.find((q) => q.id === t.dataset.slot);
-      if (x) { guideSheet(x.repdbId || x.repdbImageId, x); db(); }
+      const d = dayOf(plan(), parts()[1] || L.nextDayId(plan(), S.rotation[plan().id] || 0));
+      const x = d.exercises.find((q) => q.id === t.dataset.slot);
+      if (x) { nkRef = { planId: plan().id, dayId: d.id, slotId: x.id }; guideSheet(x.repdbId || x.repdbImageId, x, true); db(); }
     },
+    'nk-': () => nkBump(-1), 'nk+': () => nkBump(1),
+    'nk-save': () => {
+      const raw = $('#nk').value.replace(',', '.').trim(), n = Number(raw), x = nkEx();
+      if (raw === '' || !Number.isFinite(n)) return toast('Enter a weight');
+      nkSet(x.startKg < 0 ? -Math.abs(n) : n);
+    },
+    'nk-clear': () => nkSet(null),
     guide: () => { const x = slot(ip.cur); guideSheet(x.guideId, x); },
     swap: swapSheet,
     'swap-to': () => {
@@ -614,6 +644,10 @@ function bump(field, dir) {
   const cur = Number(inp.value.replace(',', '.')) || 0;
   inp.value = String(Math.max(0, Math.round((cur + dir * step) * 100) / 100));
   saveDraft();
+}
+function nkBump(dir) {
+  const inp = $('#nk'), step = nkEx()?.stepKg || 2.5;
+  inp.value = String(Math.max(0, Math.round(((Number(inp.value.replace(',', '.')) || 0) + dir * step) * 100) / 100));
 }
 function saveDraft() { if ($('#kg') || $('#reps')) draft = { i: S.inProgress.cur, kg: $('#kg')?.value ?? '', reps: $('#reps')?.value ?? '' }; }
 document.addEventListener('input', (ev) => { if (ev.target.id === 'kg' || ev.target.id === 'reps') return saveDraft(); MODS[route()]?.onInput?.(ev, ctx); });
