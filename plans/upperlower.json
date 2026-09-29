@@ -1,6 +1,6 @@
 {
  "name": "Upper / Lower",
- "version": 1,
+ "version": 2,
  "createdAt": "2026-09-28",
  "nutrition": {
   "kcal": 2750,
@@ -768,6 +768,29 @@
      "startKg": 27.5,
      "stepKg": 2.5,
      "noteTh": "ก้นไม่ลอย เหยียดสุดบีบค้าง 1 วิ วันนี้ชะลอช่วงลง 3 วิ"
+    },
+    {
+     "id": "lb-9",
+     "name": "Hip Abductor Machine",
+     "repdbId": "hip-abduction",
+     "repdbImageId": null,
+     "alternatives": [
+      "banded-seated-hip-abduction",
+      "banded-standing-hip-abduction",
+      "side-lying-hip-abduction"
+     ],
+     "primary": [
+      "abductors"
+     ],
+     "warmup": "none",
+     "sets": 2,
+     "repMin": 12,
+     "repMax": 20,
+     "rir": "0–1",
+     "restSec": 60,
+     "startKg": 40,
+     "stepKg": 5,
+     "noteTh": "นั่งโน้มตัวไปข้างหน้าเล็กน้อยเพื่อเน้นก้นส่วนบน กางขาออกสุดแล้วค้างไว้ 1 วิ ก่อนหุบกลับช้าๆ ไม่ให้แผ่นน้ำหนักกระแทก"
     },
     {
      "id": "lb-5",

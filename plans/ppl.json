@@ -1,6 +1,6 @@
 {
  "name": "Push / Legs / Pull / Full Body",
- "version": 1,
+ "version": 2,
  "createdAt": "2026-09-29",
  "nutrition": {
   "kcal": 2750,
@@ -17,8 +17,8 @@
   {
    "id": "PU",
    "name": "Push",
-   "nameTh": "พุช (อก + ไหล่ข้าง + ไตรเซ็ป + ไหล่หลัง + ขาหน้า 1 ท่า)",
-   "focus": "Chest priority (incline + flat + flat + fly) + side delts + triceps + rear delts + 1 quad isolation last",
+   "nameTh": "พุช (อก + ไหล่ข้าง + ไตรเซ็ป + ไหล่หลัง + ขาหน้า 1 ท่า + ท้อง)",
+   "focus": "Chest priority (incline + flat + flat + fly) + side delts + triceps + rear delts + 1 quad isolation last + abs (captain's chair) last",
    "exercises": [
     {
      "id": "pu-1",
@@ -208,29 +208,6 @@
      "noteTh": "หันหลังให้เสา เชือกอยู่หลังหัว ศอกชี้ไปข้างหน้าไม่กางออก ลงให้สุดให้ไตรเซ็ปยืด แล้วเหยียดจนสุด · ซูเปอร์เซ็ตสลับกับ pu-7"
     },
     {
-     "id": "pu-9",
-     "name": "Rope Triceps Pushdown",
-     "repdbId": "tricep-pushdown",
-     "repdbImageId": null,
-     "alternatives": [
-      "v-bar-tricep-pushdown",
-      "single-arm-tricep-pushdown",
-      "machine-triceps-extension"
-     ],
-     "primary": [
-      "triceps"
-     ],
-     "warmup": "none (triceps warm from pu-7⇄pu-8 superset)",
-     "sets": 2,
-     "repMin": 10,
-     "repMax": 15,
-     "rir": "0–1",
-     "restSec": 60,
-     "startKg": 12.5,
-     "stepKg": 2.5,
-     "noteTh": "ศอกแนบลำตัวไม่ขยับ กดลงจนแขนเหยียดสุด แยกเชือกออกตอนล่าง"
-    },
-    {
      "id": "pu-10",
      "name": "Reverse Pec Deck",
      "repdbId": null,
@@ -274,14 +251,37 @@
      "startKg": 27.5,
      "stepKg": 2.5,
      "noteTh": "แกนหมุนตรงกับเข่า จับด้ามข้างเบาะ ก้นไม่ลอย เหยียดสุดบีบค้าง 1 วิ ลงช้า"
+    },
+    {
+     "id": "pu-12",
+     "name": "Captain's Chair Knee Raise",
+     "repdbId": "captains-chair-knee-raise",
+     "repdbImageId": null,
+     "alternatives": [
+      "hanging-knee-raise",
+      "machine-seated-crunch",
+      "cable-crunch"
+     ],
+     "primary": [
+      "abs"
+     ],
+     "warmup": "none",
+     "sets": 2,
+     "repMin": 10,
+     "repMax": 20,
+     "rir": "0–1",
+     "restSec": 60,
+     "startKg": null,
+     "stepKg": null,
+     "noteTh": "หลังติดพนัก ยกเข่าแล้วม้วนก้นกบขึ้นตาม ห้ามแกว่งขา ถ้าได้ 20 ครั้งสบายๆ เปลี่ยนเป็นยกขาตรง"
     }
    ]
   },
   {
    "id": "LG",
    "name": "Legs",
-   "nameTh": "ขา (ขาไม่เกิน 3 ท่า + น่อง + ท้อง)",
-   "focus": "Max 3 leg exercises to failure (squat, hinge, curl) + calves + abs",
+   "nameTh": "ขา (ขา 3 ท่าหลัก + ก้นข้าง + น่อง + ท้อง + แขน)",
+   "focus": "Squat, hinge, curl to failure + hip abductor accessory + calves + abs + rope pushdown ⇄ hammer curl superset to finish",
    "exercises": [
     {
      "id": "lg-1",
@@ -355,6 +355,29 @@
      "noteTh": "ล็อกแผ่นทับต้นขาให้แน่น เอนตัวไปข้างหน้านิดๆ ให้แฮมยืดมากขึ้น งอให้สุดแล้วปล่อยช้าๆ"
     },
     {
+     "id": "lg-7",
+     "name": "Hip Abductor Machine",
+     "repdbId": "hip-abduction",
+     "repdbImageId": null,
+     "alternatives": [
+      "banded-seated-hip-abduction",
+      "banded-standing-hip-abduction",
+      "side-lying-hip-abduction"
+     ],
+     "primary": [
+      "abductors"
+     ],
+     "warmup": "none",
+     "sets": 2,
+     "repMin": 12,
+     "repMax": 20,
+     "rir": "0–1",
+     "restSec": 60,
+     "startKg": 40,
+     "stepKg": 5,
+     "noteTh": "นั่งโน้มตัวไปข้างหน้าเล็กน้อยเพื่อเน้นก้นส่วนบน กางขาออกสุดแล้วค้างไว้ 1 วิ ก่อนหุบกลับช้าๆ ไม่ให้แผ่นน้ำหนักกระแทก"
+    },
+    {
      "id": "lg-4",
      "name": "Standing Calf Raise",
      "repdbId": "standing-calf-raise",
@@ -378,29 +401,6 @@
      "noteTh": "ลงให้ส้นต่ำสุดค้าง 1–2 วิ ขึ้นจนเขย่งสุด ห้ามเด้ง เข่าเหยียดตรง"
     },
     {
-     "id": "lg-5",
-     "name": "Seated Calf Raise",
-     "repdbId": "seated-calf-raise",
-     "repdbImageId": null,
-     "alternatives": [
-      "standing-calf-raise",
-      "smith-machine-calf-raise",
-      "dumbbell-calf-raise"
-     ],
-     "primary": [
-      "calves"
-     ],
-     "warmup": "1 × 10–12 light",
-     "sets": 2,
-     "repMin": 12,
-     "repMax": 20,
-     "rir": "0–1",
-     "restSec": 75,
-     "startKg": 22.5,
-     "stepKg": 2.5,
-     "noteTh": "ลงให้สุดค้าง 1–2 วิ ขึ้นสุด ห้ามเด้ง ท่านี้เน้นน่องชั้นใน (soleus) เครื่องนั่งกดขึ้นตรงหรือเครื่องแนวนอนก็ใช้แทนกันได้"
-    },
-    {
      "id": "lg-6",
      "name": "Machine Crunch",
      "repdbId": "machine-seated-crunch",
@@ -422,6 +422,55 @@
      "startKg": 17.5,
      "stepKg": 2.5,
      "noteTh": "ม้วนตัวด้วยท้อง ไม่ใช่ดึงด้วยแขน หายใจออกตอนม้วน ลงช้า"
+    },
+    {
+     "id": "pu-9",
+     "name": "Rope Triceps Pushdown",
+     "repdbId": "tricep-pushdown",
+     "repdbImageId": null,
+     "alternatives": [
+      "v-bar-tricep-pushdown",
+      "single-arm-tricep-pushdown",
+      "machine-triceps-extension"
+     ],
+     "primary": [
+      "triceps"
+     ],
+     "warmup": "1 × 10–12 light",
+     "sets": 2,
+     "repMin": 10,
+     "repMax": 15,
+     "rir": "0–1",
+     "restSec": 60,
+     "startKg": 12.5,
+     "stepKg": 2.5,
+     "noteTh": "ศอกแนบลำตัวไม่ขยับ กดลงจนแขนเหยียดสุด แยกเชือกออกตอนล่าง",
+     "supersetWith": "pl-9"
+    },
+    {
+     "id": "pl-9",
+     "name": "Dumbbell Hammer Curl",
+     "repdbId": "hammer-curl",
+     "repdbImageId": null,
+     "alternatives": [
+      "cable-hammer-curl",
+      "incline-hammer-curl",
+      "cross-body-hammer-curl"
+     ],
+     "primary": [
+      "biceps"
+     ],
+     "perSide": true,
+     "warmup": "none (arms warm from the pushdown)",
+     "sets": 2,
+     "repMin": 10,
+     "repMax": 15,
+     "rir": "0–1",
+     "restSec": 60,
+     "startKg": 7.5,
+     "stepKg": 1,
+     "noteTh": "ถือดัมเบลแบบตะแคง (neutral grip) ม้วนขึ้นโดยศอกไม่แกว่ง บีบค้างด้านบน ลงช้าจนเกือบเหยียดสุด (น้ำหนักต่อข้าง)",
+     "supersetWith": "pu-9"
     }
    ]
   },
@@ -620,30 +669,6 @@
      "noteTh": "ม้านั่งเอียง ~45–60° แขนห้อยไปหลังลำตัวให้ไบเซ็ปยืด ม้วนขึ้นโดยศอกไม่เลื่อนไปข้างหน้า (น้ำหนักต่อข้าง) · ซูเปอร์เซ็ตสลับกับ pl-7"
     },
     {
-     "id": "pl-9",
-     "name": "Dumbbell Hammer Curl",
-     "repdbId": "hammer-curl",
-     "repdbImageId": null,
-     "alternatives": [
-      "cable-hammer-curl",
-      "incline-hammer-curl",
-      "cross-body-hammer-curl"
-     ],
-     "primary": [
-      "biceps"
-     ],
-     "perSide": true,
-     "warmup": "none (biceps warm from pl-7⇄pl-8 superset)",
-     "sets": 2,
-     "repMin": 10,
-     "repMax": 15,
-     "rir": "0–1",
-     "restSec": 60,
-     "startKg": 7.5,
-     "stepKg": 1,
-     "noteTh": "ถือดัมเบลแบบตะแคง (neutral grip) ม้วนขึ้นโดยศอกไม่แกว่ง บีบค้างด้านบน ลงช้าจนเกือบเหยียดสุด (น้ำหนักต่อข้าง)"
-    },
-    {
      "id": "pl-10",
      "name": "Lying Leg Curl",
      "repdbId": "leg-curl",
@@ -670,8 +695,8 @@
   {
    "id": "FB",
    "name": "Full Body",
-   "nameTh": "ฟูลบอดี้ (อก + หลัง + ขาหน้า + ไหล่ข้าง)",
-   "focus": "4 muscle groups only, no supersets: chest, back, quads, side delts",
+   "nameTh": "ฟูลบอดี้ (อก + หลัง + ขาหน้า + ไหล่ข้าง + น่อง)",
+   "focus": "Chest, back, quads, side delts, no supersets + seated calf raise last",
    "exercises": [
     {
      "id": "fb-1",
@@ -790,6 +815,29 @@
      "stepKg": 2.5,
      "perSide": true,
      "noteTh": "ทำทีละข้าง รอกต่ำสุด มืออีกข้างจับเสาแล้วเอนตัวออก เริ่มจากแขนไขว้หน้าลำตัวเพื่อยืดไหล่ ยกด้วยศอกขึ้นแค่ระดับไหล่ ลงช้า (น้ำหนักเริ่มเป็นค่าประมาณ)"
+    },
+    {
+     "id": "lg-5",
+     "name": "Seated Calf Raise",
+     "repdbId": "seated-calf-raise",
+     "repdbImageId": null,
+     "alternatives": [
+      "standing-calf-raise",
+      "smith-machine-calf-raise",
+      "dumbbell-calf-raise"
+     ],
+     "primary": [
+      "calves"
+     ],
+     "warmup": "1 × 10–12 light",
+     "sets": 2,
+     "repMin": 12,
+     "repMax": 20,
+     "rir": "0–1",
+     "restSec": 75,
+     "startKg": 22.5,
+     "stepKg": 2.5,
+     "noteTh": "ลงให้สุดค้าง 1–2 วิ ขึ้นสุด ห้ามเด้ง ท่านี้เน้นน่องชั้นใน (soleus) เครื่องนั่งกดขึ้นตรงหรือเครื่องแนวนอนก็ใช้แทนกันได้"
     }
    ]
   }

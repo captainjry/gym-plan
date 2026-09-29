@@ -8,7 +8,7 @@ const MODS = { history: HistoryMod, plan: PlanMod, explore: ExploreMod };
 
 const KEY = 'gp.v1';
 const DATA = 'https://exercise-dataset.com/';
-const DEFAULT_PLANS = { upperlower: 'plans/upperlower.json', ppl: 'plans/ppl.json' };
+const DEFAULT_PLANS = { upperlower: 'plans/upperlower.json', ppl: 'plans/ppl.json', boom: 'plans/boom.json' };
 const $ = (s) => document.querySelector(s);
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
 const now = () => new Date().toISOString();
@@ -529,14 +529,16 @@ function watchUpdates(reg) {
 // ---------- plan updates ----------
 let planUpd = {}; // planId → newer shipped default
 async function checkPlanUpdates() {
+  let added = false;
   for (const [id, path] of Object.entries(DEFAULT_PLANS)) {
     try {
       const f = await (await fetch(path, { cache: 'no-store' })).json();
-      if (!S.plans[id]) { S.plans[id] = { ...f, id, source: path }; save(); continue; } // new default plan
+      if (!S.plans[id]) { S.plans[id] = { ...f, id, source: path }; save(); added = true; continue; } // new default plan (existing users get plans shipped later)
       if (L.planUpdateAvailable(S.plans[id], f, S.settings.dismissedPlanVersion?.[id])) planUpd[id] = f;
     } catch {}
   }
-  const el = $('#planupd'); if (el) el.innerHTML = planUpdHtml();
+  if (added && route() !== 'workout') render(); // show the new plan in the switch (render also redraws #planupd)
+  else { const el = $('#planupd'); if (el) el.innerHTML = planUpdHtml(); }
 }
 function planUpdHtml() {
   return Object.entries(planUpd).map(([id, f]) => {
