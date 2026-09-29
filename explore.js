@@ -44,7 +44,7 @@ const FIG = {
 };
 const onSide = (side, r) => FIG[side].some((f) => f[0] === r);
 function figure(side, heat) {
-  const cls = (r) => `m${r === st.region ? ' on' : ''}${heat[r] ? (heat[r] >= 6 ? ' h2' : ' h1') : ''}`;
+  const cls = (r) => `m${r === st.region ? ' on' : ''}${heat[r] ? ' h1' : ''}`;
   const paths = FIG[side].map(([r, d]) => `<path class="${cls(r)}" data-a="x-reg" data-r="${r}" d="${d}"/>`).join('');
   return `<path class="sil" d="${SIL}"/><g>${paths}</g><g transform="matrix(-1 0 0 1 200 0)"><path class="sil" d="${SIL}"/>${paths}</g>`;
 }
@@ -157,7 +157,7 @@ function libBody() {
 function detail(id) {
   const x = C.DB?.get(id);
   const back = `<header class="phead"><button class="btn ghost small" data-a="back">‹ Explore</button><div class="ptitle">Exercise</div><span></span></header>`;
-  if (!x) return back + (C.DB ? '<p class="muted pad">Exercise not found.</p>' : `<div class="pics large"><span class="ph"></span><span class="ph"></span></div>${skel()}`);
+  if (!x) return back + (C.DB ? '<p class="muted pad">Exercise not found.</p>' : navigator.onLine ? `<div class="pics large"><span class="ph"></span><span class="ph"></span></div>${skel()}` : offline());
   const q = encodeURIComponent(`${x.name_en} form`).replace(/%20/g, '+');
   const regs = (k) => C.L.exRegions(x, k).map((r) => `<button class="chip" data-a="x-goreg" data-r="${r}">${RN[r].name}</button>`).join('');
   const mus = (k) => [].concat(x[k] ?? []).filter((m) => typeof m === 'string').map(human).join(', ');
